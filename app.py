@@ -7,13 +7,16 @@ import jwt
 import os
 
 app = Flask(__name__)
+
+# Config
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///connect.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Enable CORS - Allow frontend to connect
+# Enable CORS - allow frontend to connect
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
+# Initialize DB
 db = SQLAlchemy(app)
 
 # ========== MODELS ==========
@@ -24,6 +27,7 @@ class User(db.Model):
     full_name = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     events = db.relationship('Event', backref='user', lazy=True)
+    contacts = db.relationship('Contact', backref='user', lazy=True)
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,10 +52,17 @@ class Contact(db.Model):
 
 # ========== ROUTES ==========
 
+# Root route for browser testing
+@app.route('/')
+def home():
+    return "Connect Celebrate Backend is running!"
+
+# Health check
 @app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({'status': 'healthy', 'message': 'Backend is running!'}), 200
 
+# Auth - Register
 @app.route('/api/auth/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -70,7 +81,7 @@ def register():
     token = jwt.encode({
         'user_id': user.id,
         'exp': datetime.utcnow() + timedelta(days=30)
-    }, app.config['SECRET_KEY'])
+    }, app.config['SECRET_KEY'], algorithm='HS256')
     
     return jsonify({
         'token': token,
@@ -81,6 +92,7 @@ def register():
         }
     }), 201
 
+# Auth - Login
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -92,7 +104,7 @@ def login():
     token = jwt.encode({
         'user_id': user.id,
         'exp': datetime.utcnow() + timedelta(days=30)
-    }, app.config['SECRET_KEY'])
+    }, app.config['SECRET_KEY'], algorithm='HS256')
     
     return jsonify({
         'token': token,
@@ -103,6 +115,7 @@ def login():
         }
     }), 200
 
+# Get events
 @app.route('/api/events', methods=['GET'])
 def get_events():
     token = request.headers.get('Authorization', '').replace('Bearer ', '')
@@ -122,6 +135,7 @@ def get_events():
     except:
         return jsonify({'error': 'Invalid token'}), 401
 
+# Create event
 @app.route('/api/events', methods=['POST'])
 def create_event():
     token = request.headers.get('Authorization', '').replace('Bearer ', '')
@@ -142,13 +156,11 @@ def create_event():
         db.session.add(event)
         db.session.commit()
         
-        return jsonify({
-            'id': event.id,
-            'message': 'Event created successfully'
-        }), 201
+        return jsonify({'id': event.id, 'message': 'Event created successfully'}), 201
     except:
         return jsonify({'error': 'Invalid token'}), 401
 
+# Get contacts
 @app.route('/api/contacts', methods=['GET'])
 def get_contacts():
     token = request.headers.get('Authorization', '').replace('Bearer ', '')
@@ -166,6 +178,7 @@ def get_contacts():
     except:
         return jsonify({'error': 'Invalid token'}), 401
 
+# Create contact
 @app.route('/api/contacts', methods=['POST'])
 def create_contact():
     token = request.headers.get('Authorization', '').replace('Bearer ', '')
@@ -187,10 +200,6 @@ def create_contact():
         return jsonify({'id': contact.id, 'message': 'Contact created'}), 201
     except:
         return jsonify({'error': 'Invalid token'}), 401
-        
-@app.route('/')
-def home():
-    return "Connect Celebrate Backend is running!"
 
 # Initialize database
 with app.app_context():
