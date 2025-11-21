@@ -187,6 +187,10 @@ def create_contact():
         return jsonify({'id': contact.id, 'message': 'Contact created'}), 201
     except:
         return jsonify({'error': 'Invalid token'}), 401
+        
+@app.route('/')
+def home():
+    return "Connect Celebrate Backend is running!"
 
 # Initialize database
 with app.app_context():
