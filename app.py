@@ -7,30 +7,19 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///events.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Initialize extensions
     db.init_app(app)
     CORS(app)
 
-    # Import models after db is initialized
-    from models import Event
+    from models import Event, Contact, Voice, Manage
 
-    # Routes
+    # ----- Event Routes -----
     @app.route('/api/events', methods=['POST'])
     def create_event():
         data = request.get_json()
-        new_event = Event(
-            title=data.get('title'),
-            date=data.get('date'),
-            time=data.get('time'),
-            location=data.get('location'),
-            description=data.get('description'),
-            host=data.get('host'),
-            template=data.get('template'),
-            rsvpDeadline=data.get('rsvpDeadline')
-        )
-        db.session.add(new_event)
+        e = Event(**data)
+        db.session.add(e)
         db.session.commit()
-        return jsonify({'id': new_event.id}), 201
+        return jsonify({'id': e.id}), 201
 
     @app.route('/api/events', methods=['GET'])
     def get_events():
@@ -45,9 +34,81 @@ def create_app():
             'host': e.host,
             'template': e.template,
             'rsvpDeadline': e.rsvpDeadline
-        } for e in events]), 200
+        } for e in events])
+
+    # ----- Contact Routes -----
+    @app.route('/api/contacts', methods=['POST'])
+    def create_contact():
+        data = request.get_json()
+        c = Contact(**data)
+        db.session.add(c)
+        db.session.commit()
+        return jsonify({'id': c.id}), 201
+
+    @app.route('/api/contacts', methods=['GET'])
+    def get_contacts():
+        contacts = Contact.query.all()
+        return jsonify([{
+            'id': c.id,
+            'name': c.name,
+            'email': c.email,
+            'message': c.message
+        } for c in contacts])
+
+    # ----- Voice Routes -----
+    @app.route('/api/voice', methods=['POST'])
+    def add_voice():
+        data = request.get_json()
+        v = Voice(**data)
+        db.session.add(v)
+        db.session.commit()
+        return jsonify({'id': v.id}), 201
+
+    @app.route('/api/voice', methods=['GET'])
+    def get_voice():
+        voices = Voice.query.all()
+        return jsonify([{
+            'id': v.id,
+            'command': v.command,
+            'response': v.response
+        } for v in voices])
+
+    # ----- Manage Routes -----
+    @app.route('/api/manage', methods=['POST'])
+    def add_task():
+        data = request.get_json()
+        m = Manage(**data)
+        db.session.add(m)
+        db.session.commit()
+        return jsonify({'id': m.id}), 201
+
+    @app.route('/api/manage', methods=['GET'])
+    def get_tasks():
+        tasks = Manage.query.all()
+        return jsonify([{
+            'id': t.id,
+            'task': t.task,
+            'status': t.status
+        } for t in tasks])
+
+    @app.route('/api/manage/<int:id>', methods=['PUT'])
+    def update_task(id):
+        t = Manage.query.get_or_404(id)
+        data = request.get_json()
+        t.task = data.get('task', t.task)
+        t.status = data.get('status', t.status)
+        db.session.commit()
+        return jsonify({'msg': 'updated'})
+
+    @app.route('/api/manage/<int:id>', methods=['DELETE'])
+    def delete_task(id):
+        t = Manage.query.get_or_404(id)
+        db.session.delete(t)
+        db.session.commit()
+        return jsonify({'msg': 'deleted'})
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app()
