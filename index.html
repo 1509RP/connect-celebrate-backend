@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connect & Celebrate - AI Event Invitations</title>
+<title>Connect & Celebrate - AI Event System</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 * { font-family: 'Poppins', sans-serif; }
 body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
 .card-hover { transition: all 0.3s ease; cursor: grab; }
 .card-hover:active { cursor: grabbing; }
 .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.animate-float { animation: float 3s ease-in-out infinite; }
 </style>
 </head>
 <body>
@@ -23,208 +23,232 @@ body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
 let state = {
     activeTab: 'create',
     events: [],
-    currentEvent: { title: '', date: '', time: '', location: '', description: '', host: '', rsvpDeadline: '', template: 'modern' },
-    manageTasks: [],
+    tasks: [],
     contacts: [],
-    selectedContacts: [],
+    voices: [],
+    currentEvent: { title:'', date:'', time:'', location:'', description:'', host:'', template:'modern', rsvpDeadline:'' },
+    currentTask: '',
+    currentContact: { name:'', email:'', message:'' },
+    currentVoice: { command:'', response:'' },
     isRecording: false,
-    voiceSamples: [],
-    showModal: false
 };
 
+// Templates
 const templates = {
     modern: { bg: 'bg-gradient-to-br from-blue-50 to-indigo-100', accent: 'text-blue-600', border: 'border-blue-300' },
     elegant: { bg: 'bg-gradient-to-br from-purple-50 to-pink-100', accent: 'text-purple-600', border: 'border-purple-300' },
     casual: { bg: 'bg-gradient-to-br from-green-50 to-emerald-100', accent: 'text-green-600', border: 'border-green-300' }
 };
 
-// Render App
+// --- RENDER ---
 function render() {
     document.getElementById('app').innerHTML = `
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
-            <div class="max-w-6xl mx-auto px-4 py-6">
-                <h1 class="text-3xl font-bold flex items-center gap-3">
-                    <i data-lucide="calendar" class="h-8 w-8"></i>
-                    Connect & Celebrate
-                </h1>
-                <p class="text-indigo-100 mt-1">Create beautiful AI-powered invitations</p>
-            </div>
-        </div>
-
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
         <div class="max-w-6xl mx-auto px-4 py-6">
-            <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
-                ${['create','manage','contacts','voice'].map(tab => `
-                    <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab===tab?'bg-gradient-to-r from-indigo-600 to-purple-600 text-white':'text-gray-600 hover:bg-gray-100'}">
-                        ${tab.charAt(0).toUpperCase()+tab.slice(1)}
-                    </button>
-                `).join('')}
-            </div>
+            <h1 class="text-3xl font-bold flex items-center gap-3">
+                <i data-lucide="calendar" class="h-8 w-8"></i>
+                Connect & Celebrate
+            </h1>
+            <p class="text-indigo-100 mt-1">AI Event & Task Manager</p>
         </div>
+    </div>
 
-        <div class="max-w-6xl mx-auto px-4 pb-8">
-            ${getContent()}
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
+            ${['create','manage','contacts','voice'].map(tab => `
+                <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab===tab?'bg-gradient-to-r from-indigo-600 to-purple-600 text-white':'text-gray-600 hover:bg-gray-100'}">
+                    ${tab.charAt(0).toUpperCase()+tab.slice(1)}
+                </button>
+            `).join('')}
         </div>
-        ${state.showModal ? renderModal() : ''}
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 pb-8">
+        ${getContent()}
+    </div>
     `;
     if(window.lucide) lucide.createIcons();
 }
 
-// Get Tab Content
+// --- TAB CONTENT ---
 function getContent() {
-    if(state.activeTab==='create') return renderCreateTab();
-    if(state.activeTab==='manage') return renderManageTab();
-    if(state.activeTab==='contacts') return renderContactsTab();
-    if(state.activeTab==='voice') return renderVoiceTab();
-    return '';
-}
-
-// --- Create Event Tab ---
-function renderCreateTab() {
-    return `
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-            <h2 class="text-xl font-bold mb-4">Create Event</h2>
-            <div class="space-y-4">
-                <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="date" value="${state.currentEvent.date}" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <input type="time" value="${state.currentEvent.time}" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                </div>
-                <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                <input type="text" placeholder="Host Name" value="${state.currentEvent.host}" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
-                <input type="date" placeholder="RSVP Deadline" value="${state.currentEvent.rsvpDeadline}" oninput="updateField('rsvpDeadline', this.value)" class="w-full px-4 py-3 border rounded-lg">
-
-                <h3 class="font-semibold">Select Template:</h3>
-                <div class="grid grid-cols-3 gap-2">
-                    ${Object.keys(templates).map(key=>`
-                        <div class="card-hover p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template===key?'ring-4 ring-offset-2 '+templates[key].border:''}" draggable="true" ondragstart="dragStart(event,'${key}')" onclick="selectTemplate('${key}')">
-                            <div class="${templates[key].accent} font-semibold capitalize text-center">${key}</div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition">
-                    Create Event
-                </button>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-            <h2 class="text-xl font-bold mb-4">Preview</h2>
-            <div id="preview" class="p-6 rounded-xl border-2 transition-all duration-300 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}">
-                <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3>
-                <div class="space-y-2 text-center">
-                    <p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p>
-                    <p>📍 ${state.currentEvent.location||'Location'}</p>
-                    ${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}
-                    ${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}
-                    ${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
-}
-
-// --- Manage Tab ---
-function renderManageTab() {
-    if(state.manageTasks.length===0) return `<p class="mt-4 text-gray-500">No tasks available.</p>`;
-    return `
-        <div class="grid grid-cols-1 gap-4 mt-4">
-            ${state.manageTasks.map(t=>`
-                <div class="bg-white p-4 rounded-lg shadow card-hover flex justify-between items-center">
-                    <span>${t.task}</span>
-                    <span class="text-sm text-gray-500">${t.status}</span>
-                </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-// --- Contacts Tab ---
-function renderContactsTab() {
-    if(state.contacts.length===0) return `<p class="mt-4 text-gray-500">No contacts available.</p>`;
-    return `
-        <div class="grid grid-cols-1 gap-4 mt-4">
-            ${state.contacts.map(c=>`
-                <div class="bg-white p-4 rounded-lg shadow card-hover flex justify-between items-center">
-                    <div>
-                        <p class="font-semibold">${c.name}</p>
-                        <p class="text-sm text-gray-500">${c.email} | ${c.phone}</p>
+    if(state.activeTab==='create') return `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                <h2 class="text-xl font-bold mb-4">Create Event</h2>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="state.currentEvent.title=this.value" class="w-full px-4 py-3 border rounded-lg">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="date" value="${state.currentEvent.date}" oninput="state.currentEvent.date=this.value" class="w-full px-4 py-3 border rounded-lg">
+                        <input type="time" value="${state.currentEvent.time}" oninput="state.currentEvent.time=this.value" class="w-full px-4 py-3 border rounded-lg">
                     </div>
-                    <button onclick="toggleContact(${c.id})" class="py-1 px-3 border rounded-lg">${state.selectedContacts.includes(c.id)?'Selected':'Select'}</button>
+                    <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="state.currentEvent.location=this.value" class="w-full px-4 py-3 border rounded-lg">
+                    <input type="text" placeholder="Host" value="${state.currentEvent.host}" oninput="state.currentEvent.host=this.value" class="w-full px-4 py-3 border rounded-lg">
+                    <textarea placeholder="Description" oninput="state.currentEvent.description=this.value" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
+                    <input type="date" placeholder="RSVP Deadline" value="${state.currentEvent.rsvpDeadline}" oninput="state.currentEvent.rsvpDeadline=this.value" class="w-full px-4 py-3 border rounded-lg">
+                    
+                    <h3 class="font-semibold">Select Template:</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        ${Object.keys(templates).map(key=>`
+                            <div class="card-hover p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template===key?'ring-4 ring-offset-2 '+templates[key].border:''}" draggable="true" ondragstart="dragStart(event,'${key}')" onclick="state.currentEvent.template='${key}'">
+                                <div class="${templates[key].accent} font-semibold capitalize text-center">${key}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition">
+                        Create Event
+                    </button>
                 </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-// --- Voice Tab ---
-function renderVoiceTab() {
-    return `
-        <div class="mt-4 flex gap-4">
-            <button onclick="toggleRecording()" class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:shadow-lg">
-                ${state.isRecording?'Recording...':'Record Voice'}
-            </button>
-            <button onclick="resetVoice()" class="py-2 px-4 bg-gray-300 rounded-lg hover:bg-gray-400">Reset</button>
-        </div>
-        ${state.voiceSamples.length>0?`<div class="mt-4">
-            ${state.voiceSamples.map(v=>`<div class="bg-white p-3 rounded-lg shadow mb-2">${v.command} → ${v.response}</div>`).join('')}
-        </div>`:''}
-    `;
-}
-
-// --- Modal ---
-function renderModal() {
-    return `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModal()">
-            <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4" onclick="event.stopPropagation()">
-                <h3 class="text-lg font-bold mb-4">Send Invitations</h3>
-                <div class="space-y-3">
-                    ${['SMS','Email','Voice'].map(m=>`
-                        <button onclick="sendInvite('${m}')" class="w-full p-4 border-2 rounded-lg hover:bg-gray-50 text-left font-semibold">
-                            ${m==='SMS'?'📱':m==='Email'?'📧':'🎤'} ${m}
-                        </button>
-                    `).join('')}
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                <h2 class="text-xl font-bold mb-4">Preview</h2>
+                <div id="preview" class="p-6 rounded-xl border-2 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}">
+                    <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3>
+                    <div class="space-y-2 text-center">
+                        <p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p>
+                        <p>📍 ${state.currentEvent.location||'Location'}</p>
+                        ${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}
+                        ${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}
+                        ${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}
+                    </div>
                 </div>
-                <button onclick="closeModal()" class="w-full mt-4 py-2 border rounded-lg">Cancel</button>
             </div>
         </div>
     `;
+
+    if(state.activeTab==='manage') return `
+        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+            <h2 class="text-xl font-bold mb-4">Manage Tasks</h2>
+            <div class="flex gap-2 mb-4">
+                <input type="text" placeholder="New Task" class="flex-1 px-4 py-2 border rounded-lg" oninput="state.currentTask=this.value">
+                <button onclick="addTask()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Add</button>
+            </div>
+            <ul class="space-y-2">
+                ${state.tasks.map(t=>`
+                    <li class="flex justify-between items-center p-2 border rounded-lg">
+                        <span>${t.task} (${t.status})</span>
+                        <div class="flex gap-2">
+                            <button onclick="updateTask(${t.id})" class="px-2 py-1 bg-green-500 text-white rounded">✓</button>
+                            <button onclick="deleteTask(${t.id})" class="px-2 py-1 bg-red-500 text-white rounded">✕</button>
+                        </div>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+    `;
+
+    if(state.activeTab==='contacts') return `
+        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+            <h2 class="text-xl font-bold mb-4">Contacts</h2>
+            <div class="space-y-2 mb-4">
+                <input type="text" placeholder="Name" class="w-full px-4 py-2 border rounded" oninput="state.currentContact.name=this.value">
+                <input type="email" placeholder="Email" class="w-full px-4 py-2 border rounded" oninput="state.currentContact.email=this.value">
+                <textarea placeholder="Message" class="w-full px-4 py-2 border rounded" rows="3" oninput="state.currentContact.message=this.value"></textarea>
+                <button onclick="addContact()" class="w-full py-2 bg-indigo-600 text-white rounded">Send</button>
+            </div>
+            <ul class="space-y-2">
+                ${state.contacts.map(c=>`<li class="p-2 border rounded"><strong>${c.name}</strong> (${c.email}): ${c.message}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+
+    if(state.activeTab==='voice') return `
+        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+            <h2 class="text-xl font-bold mb-4">Voice Commands</h2>
+            <div class="flex gap-2 mb-4">
+                <input type="text" placeholder="Command" class="flex-1 px-4 py-2 border rounded" oninput="state.currentVoice.command=this.value">
+                <input type="text" placeholder="Response" class="flex-1 px-4 py-2 border rounded" oninput="state.currentVoice.response=this.value">
+                <button onclick="recordVoice()" class="px-4 py-2 bg-indigo-600 text-white rounded">${state.isRecording?'Recording...':'Record & Save'}</button>
+            </div>
+            <ul class="space-y-2">
+                ${state.voices.map(v=>`<li class="p-2 border rounded"><strong>${v.command}</strong>: ${v.response}</li>`).join('')}
+            </ul>
+        </div>
+    `;
 }
 
-// --- JS Functions ---
-function changeTab(tab) { state.activeTab=tab; if(tab==='manage') loadManage(); if(tab==='contacts') loadContacts(); if(tab==='voice') loadVoice(); render(); }
-function updateField(field,value){state.currentEvent[field]=value; updatePreviewOnly();}
-function selectTemplate(key){state.currentEvent.template=key; updatePreviewOnly();}
+// --- TAB SWITCH ---
+function changeTab(tab){
+    state.activeTab=tab;
+    if(tab==='manage') loadTasks();
+    if(tab==='contacts') loadContacts();
+    if(tab==='voice') loadVoices();
+    if(tab==='create') loadEvents();
+    render();
+}
+
+// --- DRAG ---
+function dragStart(e,key){ state.currentEvent.template=key; render(); }
+
+// --- EVENTS API ---
+async function loadEvents(){
+    const res = await fetch('http://127.0.0.1:5000/api/events');
+    state.events = await res.json();
+    render();
+}
 async function createEvent(){
-    if(!state.currentEvent.title||!state.currentEvent.date||!state.currentEvent.time){alert('Please fill in Event Title, Date, and Time'); return;}
-    try{
-        const res=await fetch("http://127.0.0.1:5000/api/events",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state.currentEvent)});
-        const result=await res.json();
-        alert("✓ Event saved to database!");
-        state.events.push({...state.currentEvent,id:result.id});
-        state.currentEvent={title:'',date:'',time:'',location:'',description:'',host:'',rsvpDeadline:'',template:'modern'};
-        state.activeTab='manage';
-        render();
-    }catch(err){alert("❌ Error saving event!"); console.error(err);}
+    if(!state.currentEvent.title||!state.currentEvent.date||!state.currentEvent.time){ alert('Fill Title, Date & Time'); return; }
+    const res = await fetch('http://127.0.0.1:5000/api/events',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(state.currentEvent)});
+    const data = await res.json();
+    alert('Event Created!');
+    state.currentEvent={ title:'', date:'', time:'', location:'', description:'', host:'', template:'modern', rsvpDeadline:'' };
+    loadEvents();
 }
 
-function toggleContact(id){const idx=state.selectedContacts.indexOf(id); idx>-1?state.selectedContacts.splice(idx,1):state.selectedContacts.push(id); render();}
-function toggleRecording(){state.isRecording=!state.isRecording; render(); if(state.isRecording)setTimeout(()=>{state.isRecording=false;state.voiceSamples.push({command:'Hello',response:'Hi there!'}); render(); alert('✓ Voice recorded!');},2000);}
-function resetVoice(){state.voiceSamples=[]; render();}
-function openModal(){state.showModal=true; render();}
-function closeModal(){state.showModal=false; render();}
-function sendInvite(method){alert(`✓ Invitations sent via ${method}!`); state.showModal=false; state.selectedContacts=[]; render();}
-function dragStart(e,key){selectTemplate(key);}
-function updatePreviewOnly(){const preview=document.getElementById("preview");if(!preview) return; preview.className=`p-6 rounded-xl border-2 transition-all duration-300 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}`; preview.innerHTML=`<h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3><div class="space-y-2 text-center"><p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p><p>📍 ${state.currentEvent.location||'Location'}</p>${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}</div>`;
+// --- TASKS API ---
+async function loadTasks(){
+    const res = await fetch('http://127.0.0.1:5000/api/manage');
+    state.tasks = await res.json();
+    render();
+}
+async function addTask(){
+    if(!state.currentTask) return;
+    await fetch('http://127.0.0.1:5000/api/manage',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({task:state.currentTask})});
+    state.currentTask='';
+    loadTasks();
+}
+async function updateTask(id){
+    await fetch(`http://127.0.0.1:5000/api/manage/${id}`,{ method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:'completed'})});
+    loadTasks();
+}
+async function deleteTask(id){
+    await fetch(`http://127.0.0.1:5000/api/manage/${id}`,{ method:'DELETE'});
+    loadTasks();
+}
 
-// --- Fetch Data ---
-async function loadManage(){try{const res=await fetch("http://127.0.0.1:5000/api/manage"); state.manageTasks=await res.json(); render();}catch(e){console.error(e);}}
-async function loadContacts(){try{const res=await fetch("http://127.0.0.1:5000/api/contacts"); state.contacts=await res.json(); render();}catch(e){console.error(e);}}
-async function loadVoice(){try{const res=await fetch("http://127.0.0.1:5000/api/voice"); state.voiceSamples=await res.json(); render();}catch(e){console.error(e);}}
+// --- CONTACTS API ---
+async function loadContacts(){
+    const res = await fetch('http://127.0.0.1:5000/api/contacts');
+    state.contacts = await res.json();
+    render();
+}
+async function addContact(){
+    if(!state.currentContact.name||!state.currentContact.email||!state.currentContact.message) return;
+    await fetch('http://127.0.0.1:5000/api/contacts',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(state.currentContact)});
+    state.currentContact={name:'', email:'', message:''};
+    loadContacts();
+}
 
+// --- VOICE API ---
+async function loadVoices(){
+    const res = await fetch('http://127.0.0.1:5000/api/voice');
+    state.voices = await res.json();
+    render();
+}
+function recordVoice(){
+    if(!state.currentVoice.command||!state.currentVoice.response){ alert('Fill Command & Response'); return; }
+    state.isRecording=true; render();
+    setTimeout(async()=>{
+        state.isRecording=false;
+        await fetch('http://127.0.0.1:5000/api/voice',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(state.currentVoice)});
+        state.currentVoice={command:'', response:''};
+        loadVoices();
+        alert('Voice command saved!');
+    },2000);
+}
+
+// --- INIT ---
+changeTab('create');
 render();
 </script>
 </body>
