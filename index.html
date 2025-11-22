@@ -13,7 +13,6 @@ body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
 .card-hover { transition: all 0.3s ease; cursor: grab; }
 .card-hover:active { cursor: grabbing; }
 .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-.animate-float { animation: float 3s ease-in-out infinite; }
 </style>
 </head>
 <body>
@@ -25,15 +24,11 @@ let state = {
     activeTab: 'create',
     events: [],
     currentEvent: { title: '', date: '', time: '', location: '', description: '', host: '', rsvpDeadline: '', template: 'modern' },
-    contacts: [
-        { id: 1, name: 'Sarah Johnson', phone: '+1-555-0123', email: 'sarah@email.com', group: 'Friends', status: 'pending' },
-        { id: 2, name: 'Mike Chen', phone: '+1-555-0124', email: 'mike@email.com', group: 'Colleagues', status: 'accepted' },
-        { id: 3, name: 'Emma Davis', phone: '+1-555-0125', email: 'emma@email.com', group: 'Family', status: 'declined' },
-        { id: 4, name: 'Alex Rodriguez', phone: '+1-555-0126', email: 'alex@email.com', group: 'Friends', status: 'pending' }
-    ],
+    manageTasks: [],
+    contacts: [],
     selectedContacts: [],
     isRecording: false,
-    voiceSample: null,
+    voiceSamples: [],
     showModal: false
 };
 
@@ -43,7 +38,7 @@ const templates = {
     casual: { bg: 'bg-gradient-to-br from-green-50 to-emerald-100', accent: 'text-green-600', border: 'border-green-300' }
 };
 
-// Render the entire app
+// Render App
 function render() {
     document.getElementById('app').innerHTML = `
         <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
@@ -58,9 +53,9 @@ function render() {
 
         <div class="max-w-6xl mx-auto px-4 py-6">
             <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
-                ${['create', 'manage', 'contacts', 'voice'].map(tab => `
-                    <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab === tab ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}">
-                        ${tab.charAt(0).toUpperCase() + tab.slice(1)}
+                ${['create','manage','contacts','voice'].map(tab => `
+                    <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab===tab?'bg-gradient-to-r from-indigo-600 to-purple-600 text-white':'text-gray-600 hover:bg-gray-100'}">
+                        ${tab.charAt(0).toUpperCase()+tab.slice(1)}
                     </button>
                 `).join('')}
             </div>
@@ -74,67 +69,122 @@ function render() {
     if(window.lucide) lucide.createIcons();
 }
 
-// Generate tab content
+// Get Tab Content
 function getContent() {
-    if(state.activeTab === 'create') return `
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-                <h2 class="text-xl font-bold mb-4">Create Event</h2>
-                <div class="space-y-4">
-                    <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="date" value="${state.currentEvent.date}" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                        <input type="time" value="${state.currentEvent.time}" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    </div>
-                    <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <input type="text" placeholder="Host Name" value="${state.currentEvent.host}" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
-                    <input type="date" placeholder="RSVP Deadline" value="${state.currentEvent.rsvpDeadline}" oninput="updateField('rsvpDeadline', this.value)" class="w-full px-4 py-3 border rounded-lg">
+    if(state.activeTab==='create') return renderCreateTab();
+    if(state.activeTab==='manage') return renderManageTab();
+    if(state.activeTab==='contacts') return renderContactsTab();
+    if(state.activeTab==='voice') return renderVoiceTab();
+    return '';
+}
 
-                    <h3 class="font-semibold">Select Template:</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                        ${Object.keys(templates).map(key => `
-                            <div class="card-hover p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template === key ? 'ring-4 ring-offset-2 ' + templates[key].border : ''}" draggable="true" ondragstart="dragStart(event, '${key}')" onclick="selectTemplate('${key}')">
-                                <div class="${templates[key].accent} font-semibold capitalize text-center">${key}</div>
-                            </div>
-                        `).join('')}
-                    </div>
+// --- Create Event Tab ---
+function renderCreateTab() {
+    return `
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+            <h2 class="text-xl font-bold mb-4">Create Event</h2>
+            <div class="space-y-4">
+                <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="date" value="${state.currentEvent.date}" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                    <input type="time" value="${state.currentEvent.time}" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                </div>
+                <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                <input type="text" placeholder="Host Name" value="${state.currentEvent.host}" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
+                <input type="date" placeholder="RSVP Deadline" value="${state.currentEvent.rsvpDeadline}" oninput="updateField('rsvpDeadline', this.value)" class="w-full px-4 py-3 border rounded-lg">
 
-                    <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition">
-                        Create Event
-                    </button>
+                <h3 class="font-semibold">Select Template:</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    ${Object.keys(templates).map(key=>`
+                        <div class="card-hover p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template===key?'ring-4 ring-offset-2 '+templates[key].border:''}" draggable="true" ondragstart="dragStart(event,'${key}')" onclick="selectTemplate('${key}')">
+                            <div class="${templates[key].accent} font-semibold capitalize text-center">${key}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition">
+                    Create Event
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+            <h2 class="text-xl font-bold mb-4">Preview</h2>
+            <div id="preview" class="p-6 rounded-xl border-2 transition-all duration-300 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}">
+                <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3>
+                <div class="space-y-2 text-center">
+                    <p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p>
+                    <p>📍 ${state.currentEvent.location||'Location'}</p>
+                    ${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}
+                    ${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}
+                    ${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}
                 </div>
             </div>
+        </div>
+    </div>
+    `;
+}
 
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-                <h2 class="text-xl font-bold mb-4">Preview</h2>
-                <div id="preview" class="p-6 rounded-xl border-2 transition-all duration-300 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}">
-                    <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title || 'Event Title'}</h3>
-                    <div class="space-y-2 text-center">
-                        <p>📅 ${state.currentEvent.date || 'Date'} at ${state.currentEvent.time || 'Time'}</p>
-                        <p>📍 ${state.currentEvent.location || 'Location'}</p>
-                        ${state.currentEvent.host ? `<p>👤 Hosted by: ${state.currentEvent.host}</p>` : ''}
-                        ${state.currentEvent.description ? `<p class="mt-4 italic">${state.currentEvent.description}</p>` : ''}
-                        ${state.currentEvent.rsvpDeadline ? `<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>` : ''}
-                    </div>
+// --- Manage Tab ---
+function renderManageTab() {
+    if(state.manageTasks.length===0) return `<p class="mt-4 text-gray-500">No tasks available.</p>`;
+    return `
+        <div class="grid grid-cols-1 gap-4 mt-4">
+            ${state.manageTasks.map(t=>`
+                <div class="bg-white p-4 rounded-lg shadow card-hover flex justify-between items-center">
+                    <span>${t.task}</span>
+                    <span class="text-sm text-gray-500">${t.status}</span>
                 </div>
-            </div>
+            `).join('')}
         </div>
     `;
 }
 
-// --- Manage, Contacts, Voice tabs remain unchanged (copy from previous full code) --- 
+// --- Contacts Tab ---
+function renderContactsTab() {
+    if(state.contacts.length===0) return `<p class="mt-4 text-gray-500">No contacts available.</p>`;
+    return `
+        <div class="grid grid-cols-1 gap-4 mt-4">
+            ${state.contacts.map(c=>`
+                <div class="bg-white p-4 rounded-lg shadow card-hover flex justify-between items-center">
+                    <div>
+                        <p class="font-semibold">${c.name}</p>
+                        <p class="text-sm text-gray-500">${c.email} | ${c.phone}</p>
+                    </div>
+                    <button onclick="toggleContact(${c.id})" class="py-1 px-3 border rounded-lg">${state.selectedContacts.includes(c.id)?'Selected':'Select'}</button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
 
-// Modal
+// --- Voice Tab ---
+function renderVoiceTab() {
+    return `
+        <div class="mt-4 flex gap-4">
+            <button onclick="toggleRecording()" class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:shadow-lg">
+                ${state.isRecording?'Recording...':'Record Voice'}
+            </button>
+            <button onclick="resetVoice()" class="py-2 px-4 bg-gray-300 rounded-lg hover:bg-gray-400">Reset</button>
+        </div>
+        ${state.voiceSamples.length>0?`<div class="mt-4">
+            ${state.voiceSamples.map(v=>`<div class="bg-white p-3 rounded-lg shadow mb-2">${v.command} → ${v.response}</div>`).join('')}
+        </div>`:''}
+    `;
+}
+
+// --- Modal ---
 function renderModal() {
     return `
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModal()">
             <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4" onclick="event.stopPropagation()">
                 <h3 class="text-lg font-bold mb-4">Send Invitations</h3>
                 <div class="space-y-3">
-                    ${['SMS', 'Email', 'Voice'].map(m => `
+                    ${['SMS','Email','Voice'].map(m=>`
                         <button onclick="sendInvite('${m}')" class="w-full p-4 border-2 rounded-lg hover:bg-gray-50 text-left font-semibold">
-                            ${m === 'SMS' ? '📱' : m === 'Email' ? '📧' : '🎤'} ${m}
+                            ${m==='SMS'?'📱':m==='Email'?'📧':'🎤'} ${m}
                         </button>
                     `).join('')}
                 </div>
@@ -144,51 +194,38 @@ function renderModal() {
     `;
 }
 
-// JS functions
-function changeTab(tab) { state.activeTab = tab; render(); }
-function updateField(field, value) { state.currentEvent[field] = value; updatePreviewOnly(); }
-function selectTemplate(key) { state.currentEvent.template = key; updatePreviewOnly(); }
-async function createEvent() {
-    if(!state.currentEvent.title || !state.currentEvent.date || !state.currentEvent.time) { alert('Please fill in Event Title, Date, and Time'); return; }
-    try {
-        const response = await fetch("http://127.0.0.1:5000/api/events", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(state.currentEvent) });
-        const result = await response.json();
+// --- JS Functions ---
+function changeTab(tab) { state.activeTab=tab; if(tab==='manage') loadManage(); if(tab==='contacts') loadContacts(); if(tab==='voice') loadVoice(); render(); }
+function updateField(field,value){state.currentEvent[field]=value; updatePreviewOnly();}
+function selectTemplate(key){state.currentEvent.template=key; updatePreviewOnly();}
+async function createEvent(){
+    if(!state.currentEvent.title||!state.currentEvent.date||!state.currentEvent.time){alert('Please fill in Event Title, Date, and Time'); return;}
+    try{
+        const res=await fetch("http://127.0.0.1:5000/api/events",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state.currentEvent)});
+        const result=await res.json();
         alert("✓ Event saved to database!");
-        state.events.push({...state.currentEvent, id: result.id});
-        state.currentEvent = { title:'', date:'', time:'', location:'', description:'', host:'', rsvpDeadline:'', template:'modern'};
+        state.events.push({...state.currentEvent,id:result.id});
+        state.currentEvent={title:'',date:'',time:'',location:'',description:'',host:'',rsvpDeadline:'',template:'modern'};
         state.activeTab='manage';
         render();
-    } catch(err) { alert("❌ Error saving event!"); console.error(err); }
+    }catch(err){alert("❌ Error saving event!"); console.error(err);}
 }
-function toggleContact(id) { const idx=state.selectedContacts.indexOf(id); idx>-1?state.selectedContacts.splice(idx,1):state.selectedContacts.push(id); render(); }
-function toggleRecording() { state.isRecording=!state.isRecording; render(); if(state.isRecording) setTimeout(()=>{ state.isRecording=false; state.voiceSample=true; render(); alert('✓ Voice recorded!');},3000);}
-function resetVoice() { state.voiceSample=null; render(); }
-function openModal() { state.showModal=true; render(); }
-function closeModal() { state.showModal=false; render(); }
-function sendInvite(method) { alert(`✓ Invitations sent via ${method}!`); state.showModal=false; state.selectedContacts=[]; render(); }
 
-// Drag-and-drop template preview (just visual for now)
-function dragStart(event, key) { selectTemplate(key); }
+function toggleContact(id){const idx=state.selectedContacts.indexOf(id); idx>-1?state.selectedContacts.splice(idx,1):state.selectedContacts.push(id); render();}
+function toggleRecording(){state.isRecording=!state.isRecording; render(); if(state.isRecording)setTimeout(()=>{state.isRecording=false;state.voiceSamples.push({command:'Hello',response:'Hi there!'}); render(); alert('✓ Voice recorded!');},2000);}
+function resetVoice(){state.voiceSamples=[]; render();}
+function openModal(){state.showModal=true; render();}
+function closeModal(){state.showModal=false; render();}
+function sendInvite(method){alert(`✓ Invitations sent via ${method}!`); state.showModal=false; state.selectedContacts=[]; render();}
+function dragStart(e,key){selectTemplate(key);}
+function updatePreviewOnly(){const preview=document.getElementById("preview");if(!preview) return; preview.className=`p-6 rounded-xl border-2 transition-all duration-300 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}`; preview.innerHTML=`<h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3><div class="space-y-2 text-center"><p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p><p>📍 ${state.currentEvent.location||'Location'}</p>${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}</div>`;
 
-// Update preview card only
-function updatePreviewOnly() {
-    const preview=document.getElementById("preview");
-    if(!preview) return;
-    preview.className=`p-6 rounded-xl border-2 transition-all duration-300 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}`;
-    preview.innerHTML=`
-        <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3>
-        <div class="space-y-2 text-center">
-            <p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p>
-            <p>📍 ${state.currentEvent.location||'Location'}</p>
-            ${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}
-            ${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}
-            ${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}
-        </div>
-    `;
-}
+// --- Fetch Data ---
+async function loadManage(){try{const res=await fetch("http://127.0.0.1:5000/api/manage"); state.manageTasks=await res.json(); render();}catch(e){console.error(e);}}
+async function loadContacts(){try{const res=await fetch("http://127.0.0.1:5000/api/contacts"); state.contacts=await res.json(); render();}catch(e){console.error(e);}}
+async function loadVoice(){try{const res=await fetch("http://127.0.0.1:5000/api/voice"); state.voiceSamples=await res.json(); render();}catch(e){console.error(e);}}
 
 render();
 </script>
 </body>
 </html>
-
