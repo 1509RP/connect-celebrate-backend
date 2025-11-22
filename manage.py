@@ -1,13 +1,14 @@
-from app import app, db
+from app import create_app
+from extensions import db
+
+app = create_app()
 
 def create_db():
-    """Create all tables"""
     with app.app_context():
         db.create_all()
         print("Database tables created!")
 
 def drop_db():
-    """Drop all tables"""
     with app.app_context():
         db.drop_all()
         print("Database tables dropped!")
@@ -20,5 +21,3 @@ if __name__ == "__main__":
         create_db()
     elif sys.argv[1] == "drop":
         drop_db()
-    else:
-        print("Unknown command")
