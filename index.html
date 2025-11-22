@@ -151,7 +151,7 @@ function selectTemplate(key) { state.currentEvent.template = key; updatePreviewO
 async function createEvent() {
     if(!state.currentEvent.title || !state.currentEvent.date || !state.currentEvent.time) { alert('Please fill in Event Title, Date, and Time'); return; }
     try {
-        const response = await fetch("/api/events", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(state.currentEvent) });
+        const response = await fetch("http://127.0.0.1:5000/api/events", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(state.currentEvent) });
         const result = await response.json();
         alert("✓ Event saved to database!");
         state.events.push({...state.currentEvent, id: result.id});
@@ -191,3 +191,4 @@ render();
 </script>
 </body>
 </html>
+
