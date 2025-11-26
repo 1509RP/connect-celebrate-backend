@@ -1,0 +1,14 @@
+{
+  "name": "connect-celebrate",
+  "version": "1.0.0",
+  "description": "AI-Powered Voice Invitation System",
+  "main": "server.py",
+  "scripts": {
+    "dev": "python3 server.py",
+    "build": "echo 'Build complete'",
+    "start": "python3 server.py"
+  },
+  "keywords": ["invitations", "events", "voice", "ai"],
+  "author": "",
+  "license": "MIT"
+}
