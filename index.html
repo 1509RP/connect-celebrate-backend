@@ -1,380 +1,2205 @@
-<html lang="en"><head>
+!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect &amp; Celebrate - AI Event Invitations</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>AI Voice Invitation System</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-        * { font-family: 'Poppins', sans-serif; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .animate-float { animation: float 3s ease-in-out infinite; }
+        :root {
+            --color-primary: #6366f1;
+            --color-primary-hover: #4f46e5;
+            --color-primary-active: #4338ca;
+            --color-secondary: #f3f4f6;
+            --color-secondary-hover: #e5e7eb;
+            --color-background: #fafafa;
+            --color-surface: #ffffff;
+            --color-text: #111827;
+            --color-text-secondary: #6b7280;
+            --color-border: #e5e7eb;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-info: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--color-text);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:focus-visible {
+            outline: 3px solid rgba(99, 102, 241, 0.4);
+            outline-offset: 2px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            height: fit-content;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        .nav-item:hover {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .content-area {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            min-height: 600px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--color-text);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--color-surface);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .voice-recorder {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            text-align: center;
+            border: 2px dashed var(--color-primary);
+        }
+
+        .record-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .record-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+            background: var(--color-error);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .waveform {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin: 20px 0;
+        }
+
+        .waveform-bar {
+            width: 4px;
+            height: 20px;
+            background: var(--color-primary);
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        .waveform.active .waveform-bar {
+            animation: waveAnimation 1s infinite ease-in-out;
+        }
+
+        .waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+        .waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+        .waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+        .waveform-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes waveAnimation {
+            0%, 100% { height: 20px; }
+            50% { height: 50px; }
+        }
+
+        .contact-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .contact-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .contact-details p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 1px solid var(--color-border);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-sent { background: rgba(59, 130, 246, 0.1); color: var(--color-info); }
+        .status-delivered { background: rgba(16, 185, 129, 0.1); color: var(--color-success); }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+        .status-failed { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+
+        .invitation-preview {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 2px solid var(--color-border);
+            margin-top: 20px;
+        }
+
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            margin-top: 12px;
+        }
+
+        .audio-player audio {
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--color-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--color-error);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--color-primary);
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .notification.success { border-left: 4px solid var(--color-success); }
+        .notification.error { border-left: 4px solid var(--color-error); }
+        .notification.info { border-left: 4px solid var(--color-info); }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .template-card {
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--color-surface);
+        }
+
+        .template-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+
+        .template-card.selected {
+            border-color: var(--color-primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .template-card[data-template="birthday"] {
+            background: linear-gradient(135deg, rgba(255, 107, 181, 0.08) 0%, rgba(255, 193, 7, 0.08) 100%);
+            border-color: rgba(233, 30, 99, 0.3);
+        }
+
+        .template-card[data-template="birthday"]:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 181, 0.15) 0%, rgba(255, 193, 7, 0.15) 100%);
+            border-color: #e91e63;
+        }
+
+        .template-card[data-template="wedding"] {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(219, 39, 119, 0.08) 100%);
+            border-color: rgba(219, 39, 119, 0.3);
+        }
+
+        .template-card[data-template="wedding"]:hover {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(219, 39, 119, 0.15) 100%);
+            border-color: #db2777;
+        }
+
+        .template-card[data-template="party"] {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(219, 39, 119, 0.08) 100%);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .template-card[data-template="party"]:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(219, 39, 119, 0.15) 100%);
+            border-color: #8b5cf6;
+        }
+
+        .template-card[data-template="meeting"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .template-card[data-template="meeting"]:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%);
+            border-color: #3b82f6;
+        }
+
+        .template-card[data-template="anniversary"] {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(220, 38, 38, 0.08) 100%);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .template-card[data-template="anniversary"]:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+            border-color: #ef4444;
+        }
+
+        .template-card[data-template="custom"] {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .template-card[data-template="custom"]:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border-color: #6366f1;
+        }
+
+        .template-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .template-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .template-description {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.mx-auto{margin-left:auto;margin-right:auto}.mb-4{margin-bottom:1rem}.mt-1{margin-top:0.25rem}.mb-6{margin-bottom:1.5rem}.flex{display:flex}.grid{display:grid}.h-8{height:2rem}.h-10{height:2.5rem}.h-16{height:4rem}.w-8{width:2rem}.w-full{width:100%}.w-10{width:2.5rem}.w-16{width:4rem}.max-w-6xl{max-width:72rem}.flex-1{flex:1 1 0%}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-blue-50{--tw-gradient-from:#eff6ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-green-50{--tw-gradient-from:#f0fdf4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(240 253 244 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgb(79 70 229 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-50{--tw-gradient-from:#faf5ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 245 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-emerald-100{--tw-gradient-to:#d1fae5 var(--tw-gradient-to-position)}.to-indigo-100{--tw-gradient-to:#e0e7ff var(--tw-gradient-to-position)}.to-pink-100{--tw-gradient-to:#fce7f3 var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.pb-8{padding-bottom:2rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.capitalize{text-transform:capitalize}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-indigo-100{--tw-text-opacity:1;color:rgb(224 231 255 / var(--tw-text-opacity, 1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-offset-2{--tw-ring-offset-width:2px}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}</style></head>
+</head>
 <body>
-
-<div id="app">
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
-            <div class="max-w-6xl mx-auto px-4 py-6">
-                <h1 class="text-3xl font-bold flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" class="lucide lucide-calendar h-8 w-8"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
-                    Connect &amp; Celebrate
-                </h1>
-                <p class="text-indigo-100 mt-1">Create beautiful AI-powered invitations</p>
+    <div class="container">
+        <header class="header">
+            <h1>
+                <span>🎙️</span>
+                AI Voice Invitation System
+            </h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="openModal('addContactModal')" aria-label="Add new contact">
+                    ➕ Add Contact
+                </button>
+                <button class="btn btn-primary" onclick="openModal('createInviteModal')" aria-label="Create new invitation">
+                    ✨ Create Invitation
+                </button>
             </div>
-        </div>
+        </header>
 
-        <div class="max-w-6xl mx-auto px-4 py-6">
-            <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
-                
-                    <button onclick="changeTab('create')" class="flex-1 py-3 rounded-lg font-semibold transition bg-gradient-to-r from-indigo-600 to-purple-600 text-white" fdprocessedid="uhpx7">
-                        Create
-                    </button>
-                
-                    <button onclick="changeTab('manage')" class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:bg-gray-100" fdprocessedid="o9fm2">
-                        Manage
-                    </button>
-                
-                    <button onclick="changeTab('contacts')" class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:bg-gray-100" fdprocessedid="z5pv1e">
-                        Contacts
-                    </button>
-                
-                    <button onclick="changeTab('voice')" class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:bg-gray-100" fdprocessedid="aj1u87">
-                        Voice
-                    </button>
-                
-            </div>
-        </div>
-
-        <div class="max-w-6xl mx-auto px-4 pb-8">
-            
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-                <h2 class="text-xl font-bold mb-4">Create Event</h2>
-                <div class="space-y-4">
-                    <input type="text" placeholder="Event Title" value="" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg" fdprocessedid="kiw16">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="date" value="" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                        <input type="time" value="" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
+        <div class="main-content">
+            <aside class="sidebar">
+                <nav role="navigation" aria-label="Main navigation">
+                    <div class="nav-item active" onclick="switchSection('dashboard')" role="button" tabindex="0" aria-label="Dashboard">
+                        📊 Dashboard
                     </div>
-                    <input type="text" placeholder="Location" value="" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg" fdprocessedid="bb9si8t">
-                    <input type="text" placeholder="Host Name" value="" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg" fdprocessedid="d5gbc8">
-                    <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3"></textarea>
-                    <div class="grid grid-cols-3 gap-2">
-                        
-                            <button onclick="updateField('template', 'modern')" class="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-100 ring-4 ring-offset-2 border-blue-300" fdprocessedid="gw1ix">
-                                <div class="text-blue-600 font-semibold capitalize">modern</div>
-                            </button>
-                        
-                            <button onclick="updateField('template', 'elegant')" class="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-pink-100 " fdprocessedid="voj8mj">
-                                <div class="text-purple-600 font-semibold capitalize">elegant</div>
-                            </button>
-                        
-                            <button onclick="updateField('template', 'casual')" class="p-3 rounded-lg bg-gradient-to-br from-green-50 to-emerald-100 " fdprocessedid="c9xnyb">
-                                <div class="text-green-600 font-semibold capitalize">casual</div>
-                            </button>
-                        
+                    <div class="nav-item" onclick="switchSection('invitations')" role="button" tabindex="0" aria-label="My Invitations">
+                        💌 My Invitations
                     </div>
-                    <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition" fdprocessedid="ema4pv">
-                        Create Event
-                    </button>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-                <h2 class="text-xl font-bold mb-4">Preview</h2>
-                <div id="preview" "class="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-300 border-2">
-        <h3 class="text-2xl font-bold text-center mb-4">Event Title</h3>
-        <div class="space-y-2 text-center">
-            <p>📅 Date at Time</p>
-            <p>📍 Location</p>
-            
-            
+                    <div class="nav-item" onclick="switchSection('contacts')" role="button" tabindex="0" aria-label="Contacts">
+                        👥 Contacts
+                    </div>
+                    <div class="nav-item" onclick="switchSection('voice')" role="button" tabindex="0" aria-label="Voice Clone">
+                        🎤 Voice Clone
+                    </div>
+                    <div class="nav-item" onclick="switchSection('templates')" role="button" tabindex="0" aria-label="Templates">
+                        📝 Templates
+                    </div>
+                    <div class="nav-item" onclick="switchSection('analytics')" role="button" tabindex="0" aria-label="Analytics">
+                        📈 Analytics
+                    </div>
+                </nav>
+            </aside>
+
+            <main class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="section active">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalInvites">12</div>
+                            <div class="stat-label">Total Invitations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="deliveredCount">8</div>
+                            <div class="stat-label">Delivered</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="pendingCount">3</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="responseRate">75%</div>
+                            <div class="stat-label">Response Rate</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 16px; font-size: 18px;">Recent Activity</h3>
+                    <div id="recentActivity">
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Birthday Party Invitation</h4>
+                                    <p style="font-size: 14px; color: var(--color-text-secondary);">Sent to 5 contacts • 2 hours ago</p>
+                                </div>
+                                <span class="status-badge status-delivered">Delivered</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Wedding Anniversary</h4>
+                                    <p style="font-size: 14px; color: var(--color-text-secondary);">Sent to 15 contacts • 5 hours ago</p>
+                                </div>
+                                <span class="status-badge status-sent">Sent</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Invitations Section -->
+                <section id="invitations" class="section">
+                    <h2 class="section-title">My Invitations</h2>
+                    <div id="invitationsList"></div>
+                </section>
+
+                <!-- Contacts Section -->
+                <section id="contacts" class="section">
+                    <h2 class="section-title">Contact Management</h2>
+                    <div class="contact-list" id="contactsList"></div>
+                </section>
+
+                <!-- Voice Clone Section -->
+                <section id="voice" class="section">
+                    <h2 class="section-title">Voice Cloning Studio</h2>
+                    
+                    <div class="card">
+                        <div class="voice-recorder">
+                            <h3 style="margin-bottom: 16px;">Record Your Voice Sample</h3>
+                            <p style="color: var(--color-text-secondary); margin-bottom: 8px;">
+                                <strong>📝 Instructions:</strong>
+                            </p>
+                            <ul style="color: var(--color-text-secondary); margin-bottom: 24px; padding-left: 20px; line-height: 1.8;">
+                                <li>Click the microphone button below to start recording</li>
+                                <li>Allow microphone access when your browser prompts you</li>
+                                <li>Speak clearly for at least 30 seconds for best AI cloning results</li>
+                                <li>Click again to stop recording and save</li>
+                            </ul>
+                            
+                            <button class="record-btn" id="recordBtn" onclick="toggleRecording()" aria-label="Start or stop recording">
+                                <span style="font-size: 32px;">🎙️</span>
+                            </button>
+                            
+                            <div class="waveform" id="waveform">
+                                <div class="waveform-bar"></div>
+                                <div class="waveform-bar"></div>
+                                <div class="waveform-bar"></div>
+                                <div class="waveform-bar"></div>
+                                <div class="waveform-bar"></div>
+                            </div>
+                            
+                            <div id="recordingTime" style="font-size: 24px; font-weight: 600; color: var(--color-primary); margin-top: 16px;">
+                                00:00
+                            </div>
+                            
+                            <div id="recordingStatus" style="margin-top: 12px; color: var(--color-text-secondary);">
+                                Click to start recording
+                            </div>
+                        </div>
+
+                        <div id="recordedAudioContainer" style="display: none; margin-top: 24px;">
+                            <h4 style="margin-bottom: 12px;">Your Recording</h4>
+                            <div class="audio-player">
+                                <audio id="audioPlayback" controls></audio>
+                            </div>
+                            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                <button class="btn btn-success" onclick="saveVoiceClone()">💾 Save Voice Clone</button>
+                                <button class="btn btn-secondary" onclick="discardRecording()">🗑️ Discard</button>
+                            </div>
+                        </div>
+
+                        <div id="savedVoices" style="margin-top: 32px;">
+                            <h4 style="margin-bottom: 16px;">Saved Voice Clones</h4>
+                            <p style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 12px;">
+                                These recordings are permanently saved in localStorage on this device
+                            </p>
+                            <div id="voicesList"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Templates Section -->
+                <section id="templates" class="section">
+                    <h2 class="section-title">Invitation Templates</h2>
+                    <div class="template-grid" id="templateGrid"></div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analytics" class="section">
+                    <h2 class="section-title">Analytics & Tracking</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="analyticsTotal">0</div>
+                            <div class="stat-label">Total Sent</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="analyticsAccepted">0</div>
+                            <div class="stat-label">Accepted</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="analyticsPending">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="analyticsDeclined">0</div>
+                            <div class="stat-label">Declined</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 16px;">Detailed Invitation Tracking</h3>
+                        <div id="analyticsDetails"></div>
+                    </div>
+                </section>
+            </main>
         </div>
     </div>
+
+    <!-- Create Invitation Modal -->
+    <div id="createInviteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Invitation</h3>
+                <button class="close-btn" onclick="closeModal('createInviteModal')" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('compose')">Compose</button>
+                <button class="tab" onclick="switchTab('selectVoice')">Select Voice</button>
+                <button class="tab" onclick="switchTab('recipients')">Recipients</button>
+            </div>
+
+            <div id="composeTab" class="tab-content">
+                <div class="form-group">
+                    <label class="form-label" for="inviteTitle">Invitation Title</label>
+                    <input type="text" id="inviteTitle" class="form-control" placeholder="e.g., Birthday Party" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="inviteMessage">Message</label>
+                    <textarea id="inviteMessage" class="form-control" placeholder="Write your invitation message here..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="eventDate">Event Date & Time</label>
+                    <input type="datetime-local" id="eventDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="eventLocation">Location</label>
+                    <input type="text" id="eventLocation" class="form-control" placeholder="Event venue or address">
+                </div>
+            </div>
+
+            <div id="selectVoiceTab" class="tab-content" style="display: none;">
+                <div id="voiceSelection"></div>
+            </div>
+
+            <div id="recipientsTab" class="tab-content" style="display: none;">
+                <div id="recipientSelection"></div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-primary" onclick="createInvitation()" style="flex: 1;">🚀 Send Invitation</button>
+                <button class="btn btn-secondary" onclick="previewInvitation()">👁️ Preview</button>
             </div>
         </div>
-    
-        </div>
-        
     </div>
 
-<script>
-let state = {
-    activeTab: 'create',
-    events: [],
-    currentEvent: { title: '', date: '', time: '', location: '', description: '', host: '', dressCode: '', rsvpDeadline: '', template: 'modern' },
-    contacts: [
-        { id: 1, name: 'Sarah Johnson', phone: '+1-555-0123', email: 'sarah@email.com', group: 'Friends', status: 'pending' },
-        { id: 2, name: 'Mike Chen', phone: '+1-555-0124', email: 'mike@email.com', group: 'Colleagues', status: 'accepted' },
-        { id: 3, name: 'Emma Davis', phone: '+1-555-0125', email: 'emma@email.com', group: 'Family', status: 'declined' },
-        { id: 4, name: 'Alex Rodriguez', phone: '+1-555-0126', email: 'alex@email.com', group: 'Friends', status: 'pending' }
-    ],
-    selectedContacts: [],
-    isRecording: false,
-    voiceSample: null,
-    showModal: false
-};
-
-const templates = {
-    modern: { bg: 'bg-gradient-to-br from-blue-50 to-indigo-100', accent: 'text-blue-600', border: 'border-blue-300' },
-    elegant: { bg: 'bg-gradient-to-br from-purple-50 to-pink-100', accent: 'text-purple-600', border: 'border-purple-300' },
-    casual: { bg: 'bg-gradient-to-br from-green-50 to-emerald-100', accent: 'text-green-600', border: 'border-green-300' }
-};
-
-function render() {
-    document.getElementById('app').innerHTML = `
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
-            <div class="max-w-6xl mx-auto px-4 py-6">
-                <h1 class="text-3xl font-bold flex items-center gap-3">
-                    <i data-lucide="calendar" class="h-8 w-8"></i>
-                    Connect & Celebrate
-                </h1>
-                <p class="text-indigo-100 mt-1">Create beautiful AI-powered invitations</p>
+    <!-- Preview Invitation Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Preview Invitation</h3>
+                <button class="close-btn" onclick="closeModal('previewModal')" aria-label="Close modal">✕</button>
             </div>
-        </div>
 
-        <div class="max-w-6xl mx-auto px-4 py-6">
-            <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
-                ${['create', 'manage', 'contacts', 'voice'].map(tab => `
-                    <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab === tab ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}">
-                        ${tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                `).join('')}
-            </div>
-        </div>
-
-        <div class="max-w-6xl mx-auto px-4 pb-8">
-            ${getContent()}
-        </div>
-        ${state.showModal ? renderModal() : ''}
-    `;
-    if(window.lucide) lucide.createIcons();
-}
-
-function getContent() {
-    if(state.activeTab === 'create') return `
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-                <h2 class="text-xl font-bold mb-4">Create Event</h2>
-                <div class="space-y-4">
-                    <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="date" value="${state.currentEvent.date}" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                        <input type="time" value="${state.currentEvent.time}" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
+            <div id="previewCard" class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); position: relative; overflow: hidden; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border: 3px solid transparent;">
+                <div id="previewDecoration" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden;"></div>
+                
+                <div style="position: relative; z-index: 1;">
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <h3 id="previewTitle" style="font-size: 36px; font-weight: 700; margin-bottom: 12px; color: var(--color-primary); text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); letter-spacing: 0.5px;"></h3>
+                        <div id="previewSubtitle" style="font-size: 18px; font-style: italic; font-weight: 500; opacity: 0.85; margin-top: 8px;"></div>
                     </div>
-                    <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <input type="text" placeholder="Host Name" value="${state.currentEvent.host}" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg">
-                    <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
-                    <div class="grid grid-cols-3 gap-2">
-                        ${Object.keys(templates).map(key => `
-                            <button onclick="updateField('template', '${key}')" class="p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template === key ? 'ring-4 ring-offset-2 ' + templates[key].border : ''}">
-                                <div class="${templates[key].accent} font-semibold capitalize">${key}</div>
-                            </button>
-                        `).join('')}
+                    
+                    <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 28px 32px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1); border: 2px solid rgba(255, 255, 255, 0.3);">
+                        <p id="previewMessage" style="font-size: 17px; line-height: 1.9; white-space: pre-wrap; color: #222; text-align: center; font-weight: 400;"></p>
                     </div>
-                    <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition">
-                        Create Event
-                    </button>
+                    
+                    <div style="display: grid; gap: 18px; margin-bottom: 28px;">
+                        <div id="previewDateCard" style="background: rgba(255, 255, 255, 0.9); padding: 18px 24px; border-radius: 14px; display: flex; align-items: center; gap: 18px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); border-left: 4px solid #667eea;">
+                            <div style="font-size: 32px; flex-shrink: 0;">📅</div>
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 600; opacity: 0.7; margin-bottom: 6px; color: #667eea;">Date & Time</div>
+                                <div id="previewDate" style="font-weight: 600; font-size: 16px; color: #222;"></div>
+                            </div>
+                        </div>
+                        <div id="previewLocationCard" style="background: rgba(255, 255, 255, 0.9); padding: 18px 24px; border-radius: 14px; display: flex; align-items: center; gap: 18px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); border-left: 4px solid #667eea;">
+                            <div style="font-size: 32px; flex-shrink: 0;">📍</div>
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 600; opacity: 0.7; margin-bottom: 6px; color: #667eea;">Location</div>
+                                <div id="previewLocation" style="font-weight: 600; font-size: 16px; color: #222;"></div>
+                            </div>
+                        </div>
+                        <div id="previewGuestsCard" style="background: rgba(255, 255, 255, 0.9); padding: 18px 24px; border-radius: 14px; display: flex; align-items: center; gap: 18px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); border-left: 4px solid #667eea;">
+                            <div style="font-size: 32px; flex-shrink: 0;">👥</div>
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 600; opacity: 0.7; margin-bottom: 6px; color: #667eea;">Invited Guests</div>
+                                <div id="previewRecipients" style="font-weight: 600; font-size: 16px; color: #222;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="previewVoice" style="display: none; background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);"></div>
+                    
+                    <div id="previewFooter" style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 2px dashed rgba(0, 0, 0, 0.1);"></div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-                <h2 class="text-xl font-bold mb-4">Preview</h2>
-                <div id="preview" "class="p-6 rounded-xl ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border} border-2">
-                    <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title || 'Event Title'}</h3>
-                    <div class="space-y-2 text-center">
-                        <p>📅 ${state.currentEvent.date || 'Date'} at ${state.currentEvent.time || 'Time'}</p>
-                        <p>📍 ${state.currentEvent.location || 'Location'}</p>
-                        ${state.currentEvent.host ? `<p>👤 Hosted by: ${state.currentEvent.host}</p>` : ''}
-                        ${state.currentEvent.description ? `<p class="mt-4 italic">${state.currentEvent.description}</p>` : ''}
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-secondary" onclick="closeModal('previewModal')" style="flex: 1;">← Back to Edit</button>
+                <button class="btn btn-primary" onclick="closeModal('previewModal'); createInvitation();" style="flex: 1;">✅ Looks Good, Send!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Invitation Modal -->
+    <div id="viewInvitationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Invitation Details</h3>
+                <button class="close-btn" onclick="closeModal('viewInvitationModal')" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <h3 id="viewTitle" style="color: var(--color-primary);"></h3>
+                    <span id="viewStatus" class="status-badge"></span>
+                </div>
+                
+                <p id="viewMessage" style="margin-bottom: 16px; line-height: 1.6; white-space: pre-wrap;"></p>
+                
+                <div style="display: grid; gap: 12px; margin-bottom: 16px;">
+                    <div>
+                        <strong>📅 Date & Time:</strong>
+                        <span id="viewDate"></span>
+                    </div>
+                    <div>
+                        <strong>📍 Location:</strong>
+                        <span id="viewLocation"></span>
                     </div>
                 </div>
             </div>
+
+            <div class="card">
+                <h4 style="margin-bottom: 16px;">📊 Recipient Responses</h4>
+                <div id="viewRecipients"></div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-secondary" onclick="closeModal('viewInvitationModal')">Close</button>
+                <button class="btn btn-primary" onclick="closeModal('viewInvitationModal'); resendInvitation(currentViewingInviteId);">🔄 Resend to Pending</button>
+            </div>
         </div>
-    `;
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div id="addContactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Contact</h3>
+                <button class="close-btn" onclick="closeModal('addContactModal')" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactName">Name</label>
+                <input type="text" id="contactName" class="form-control" placeholder="Full name" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactPhone">Phone Number</label>
+                <input type="tel" id="contactPhone" class="form-control" placeholder="+1 234 567 8900" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactEmail">Email</label>
+                <input type="email" id="contactEmail" class="form-control" placeholder="email@example.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactGroup">Group</label>
+                <select id="contactGroup" class="form-control">
+                    <option value="family">Family</option>
+                    <option value="friends">Friends</option>
+                    <option value="colleagues">Colleagues</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="addContact()" style="flex: 1;">➕ Add Contact</button>
+                <button class="btn btn-secondary" onclick="closeModal('addContactModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationIcon">ℹ️</span>
+        <span id="notificationMessage"></span>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
-    if(state.activeTab === 'manage') {
-        const stats = {
-            total: state.contacts.length,
-            accepted: state.contacts.filter(c => c.status === 'accepted').length,
-            declined: state.contacts.filter(c => c.status === 'declined').length,
-            pending: state.contacts.filter(c => c.status === 'pending').length
+    <script>
+        // ========================================
+        // FIREBASE CONFIGURATION
+        // ========================================
+        // TODO: Replace with your Firebase project configuration
+        // Get this from Firebase Console > Project Settings > Your apps > Firebase SDK snippet
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
-        return `
-            <div class="grid grid-cols-4 gap-4 mb-6">
-                ${[
-                    { label: 'Total', value: stats.total, color: 'blue', icon: 'users' },
-                    { label: 'Accepted', value: stats.accepted, color: 'green', icon: 'check-circle' },
-                    { label: 'Declined', value: stats.declined, color: 'red', icon: 'x-circle' },
-                    { label: 'Pending', value: stats.pending, color: 'yellow', icon: 'clock' }
-                ].map(s => `
-                    <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="text-sm text-gray-500">${s.label}</p>
-                                <p class="text-3xl font-bold text-${s.color}-600">${s.value}</p>
-                            </div>
-                            <i data-lucide="${s.icon}" class="h-10 w-10 text-${s.color}-500"></i>
+
+        // Initialize Firebase
+        let db, storage;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            storage = firebase.storage();
+            console.log('✅ Firebase initialized successfully');
+        } catch (error) {
+            console.error('❌ Firebase initialization error:', error);
+            showNotification('Firebase configuration needed. Using localStorage as fallback.', 'info');
+        }
+
+        // ========================================
+        // DATA STORAGE WITH FIREBASE + LOCALSTORAGE FALLBACK
+        // ========================================
+        let contacts = [];
+        let invitations = [];
+        let voiceClones = [];
+
+        // Check if Firebase is configured
+        function isFirebaseConfigured() {
+            return firebaseConfig.apiKey !== "YOUR_API_KEY" && db !== undefined;
+        }
+
+        // Load data from Firebase or localStorage
+        async function loadData() {
+            if (isFirebaseConfigured()) {
+                try {
+                    // Load contacts from Firebase
+                    const contactsSnapshot = await db.collection('contacts').get();
+                    contacts = contactsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    // Load invitations from Firebase
+                    const invitationsSnapshot = await db.collection('invitations').get();
+                    invitations = invitationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    // Load voice clones metadata from Firebase
+                    const voiceClonesSnapshot = await db.collection('voiceClones').get();
+                    voiceClones = voiceClonesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    console.log('✅ Data loaded from Firebase');
+                } catch (error) {
+                    console.error('❌ Error loading from Firebase:', error);
+                    showNotification('Error loading from Firebase, using localStorage', 'error');
+                    loadFromLocalStorage();
+                }
+            } else {
+                loadFromLocalStorage();
+            }
+        }
+
+        // Load from localStorage (fallback)
+        function loadFromLocalStorage() {
+            contacts = JSON.parse(localStorage.getItem('contacts')) || [
+                { id: 1, name: 'John Doe', phone: '+1234567890', email: 'john@example.com', group: 'friends' },
+                { id: 2, name: 'Jane Smith', phone: '+1234567891', email: 'jane@example.com', group: 'family' },
+                { id: 3, name: 'Mike Johnson', phone: '+1234567892', email: 'mike@example.com', group: 'colleagues' }
+            ];
+            invitations = JSON.parse(localStorage.getItem('invitations')) || [];
+            voiceClones = JSON.parse(localStorage.getItem('voiceClones')) || [];
+            console.log('✅ Data loaded from localStorage');
+        }
+
+        // Save data to Firebase and localStorage
+        async function saveToLocalStorage() {
+            // Always save to localStorage as backup
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            localStorage.setItem('invitations', JSON.stringify(invitations));
+            localStorage.setItem('voiceClones', JSON.stringify(voiceClones));
+
+            // Save to Firebase if configured
+            if (isFirebaseConfigured()) {
+                try {
+                    // Save contacts
+                    for (const contact of contacts) {
+                        await db.collection('contacts').doc(String(contact.id)).set(contact);
+                    }
+
+                    // Save invitations
+                    for (const invitation of invitations) {
+                        await db.collection('invitations').doc(String(invitation.id)).set(invitation);
+                    }
+
+                    // Save voice clones metadata (audio files saved separately)
+                    for (const voice of voiceClones) {
+                        await db.collection('voiceClones').doc(String(voice.id)).set(voice);
+                    }
+
+                    console.log('✅ Data saved to Firebase');
+                } catch (error) {
+                    console.error('❌ Error saving to Firebase:', error);
+                    showNotification('Data saved locally. Firebase sync failed.', 'warning');
+                }
+            }
+        }
+
+        // Upload voice recording to Firebase Storage
+        async function uploadVoiceToStorage(audioBlob, voiceId) {
+            if (!isFirebaseConfigured()) {
+                // Fallback to blob URL for localStorage
+                return URL.createObjectURL(audioBlob);
+            }
+
+            try {
+                const storageRef = storage.ref(`voiceClones/${voiceId}.webm`);
+                const snapshot = await storageRef.put(audioBlob);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                console.log('✅ Voice uploaded to Firebase Storage');
+                return downloadURL;
+            } catch (error) {
+                console.error('❌ Error uploading to Firebase Storage:', error);
+                showNotification('Voice saved locally. Firebase upload failed.', 'warning');
+                return URL.createObjectURL(audioBlob);
+            }
+        }
+
+        // Delete contact from Firebase
+        async function deleteContactFromFirebase(id) {
+            if (isFirebaseConfigured()) {
+                try {
+                    await db.collection('contacts').doc(String(id)).delete();
+                    console.log('✅ Contact deleted from Firebase');
+                } catch (error) {
+                    console.error('❌ Error deleting from Firebase:', error);
+                }
+            }
+        }
+
+        // Delete invitation from Firebase
+        async function deleteInvitationFromFirebase(id) {
+            if (isFirebaseConfigured()) {
+                try {
+                    await db.collection('invitations').doc(String(id)).delete();
+                    console.log('✅ Invitation deleted from Firebase');
+                } catch (error) {
+                    console.error('❌ Error deleting from Firebase:', error);
+                }
+            }
+        }
+
+        // Delete voice clone from Firebase
+        async function deleteVoiceCloneFromFirebase(id) {
+            if (isFirebaseConfigured()) {
+                try {
+                    // Delete from Firestore
+                    await db.collection('voiceClones').doc(String(id)).delete();
+                    
+                    // Delete from Storage
+                    const storageRef = storage.ref(`voiceClones/${id}.webm`);
+                    await storageRef.delete();
+                    
+                    console.log('✅ Voice clone deleted from Firebase');
+                } catch (error) {
+                    console.error('❌ Error deleting from Firebase:', error);
+                }
+            }
+        }
+        let templates = [
+            { id: 1, name: 'Birthday', icon: '🎂', description: 'Perfect for birthday celebrations' },
+            { id: 2, name: 'Wedding', icon: '💒', description: 'Elegant wedding invitations' },
+            { id: 3, name: 'Party', icon: '🎉', description: 'Fun party invites' },
+            { id: 4, name: 'Meeting', icon: '📅', description: 'Professional meeting invites' },
+            { id: 5, name: 'Anniversary', icon: '💝', description: 'Special anniversary messages' },
+            { id: 6, name: 'Custom', icon: '✨', description: 'Create your own template' }
+        ];
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordingInterval;
+        let recordingSeconds = 0;
+        let isRecording = false;
+        let currentViewingInviteId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load data from Firebase or localStorage
+            await loadData();
+            
+            // Render all sections
+            renderContacts();
+            renderInvitations();
+            renderTemplates();
+            renderVoiceClones();
+            renderAnalytics();
+            updateDashboardStats();
+
+            // Show Firebase status
+            if (isFirebaseConfigured()) {
+                showNotification('✅ Connected to Firebase - Data syncing enabled', 'success');
+            } else {
+                showNotification('⚠️ Configure Firebase in the code to enable cloud sync. Currently using localStorage only.', 'info');
+            }
+        });
+
+        // Analytics rendering
+        function renderAnalytics() {
+            let totalRecipients = 0;
+            let accepted = 0;
+            let pending = 0;
+            let declined = 0;
+
+            invitations.forEach(invite => {
+                invite.recipients.forEach(recipientId => {
+                    totalRecipients++;
+                    const response = invite.responses && invite.responses[recipientId] ? invite.responses[recipientId] : 'pending';
+                    if (response === 'accepted') accepted++;
+                    else if (response === 'declined') declined++;
+                    else pending++;
+                });
+            });
+
+            document.getElementById('analyticsTotal').textContent = totalRecipients;
+            document.getElementById('analyticsAccepted').textContent = accepted;
+            document.getElementById('analyticsPending').textContent = pending;
+            document.getElementById('analyticsDeclined').textContent = declined;
+
+            // Render detailed analytics
+            const detailsContainer = document.getElementById('analyticsDetails');
+            if (invitations.length === 0) {
+                detailsContainer.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary); padding: 40px;">No invitations to track yet</p>';
+                return;
+            }
+
+            detailsContainer.innerHTML = invitations.map(invite => {
+                const responses = invite.recipients.map(recipientId => {
+                    const contact = contacts.find(c => c.id === recipientId);
+                    const response = invite.responses && invite.responses[recipientId] ? invite.responses[recipientId] : 'pending';
+                    return { contact, response };
+                });
+
+                const acceptedCount = responses.filter(r => r.response === 'accepted').length;
+                const pendingCount = responses.filter(r => r.response === 'pending').length;
+                const declinedCount = responses.filter(r => r.response === 'declined').length;
+
+                return `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4 style="margin-bottom: 12px; font-weight: 600;">${invite.title}</h4>
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                            <span class="status-badge" style="background: rgba(16, 185, 129, 0.1); color: var(--color-success);">✅ ${acceptedCount} Accepted</span>
+                            <span class="status-badge" style="background: rgba(245, 158, 11, 0.1); color: var(--color-warning);">⏳ ${pendingCount} Pending</span>
+                            <span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: var(--color-error);">❌ ${declinedCount} Declined</span>
+                        </div>
+                        
+                        <div style="display: grid; gap: 8px;">
+                            ${responses.map(({ contact, response }) => contact ? `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--color-secondary); border-radius: 8px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="contact-avatar" style="width: 32px; height: 32px; font-size: 14px;">${contact.name.charAt(0)}</div>
+                                        <div>
+                                            <div style="font-weight: 600; font-size: 14px;">${contact.name}</div>
+                                            <div style="font-size: 12px; color: var(--color-text-secondary);">${contact.phone}</div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <select onchange="updateInvitationResponse(${invite.id}, ${contact.id}, this.value)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--color-border); background: var(--color-surface); cursor: pointer;">
+                                            <option value="pending" ${response === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                                            <option value="accepted" ${response === 'accepted' ? 'selected' : ''}>✅ Accepted</option>
+                                            <option value="declined" ${response === 'declined' ? 'selected' : ''}>❌ Declined</option>
+                                        </select>
+                                        ${response === 'pending' ? `<button class="btn btn-secondary btn-sm" onclick="resendToContact(${invite.id}, ${contact.id})">🔄 Resend</button>` : ''}
+                                    </div>
+                                </div>
+                            ` : '').join('')}
+                        </div>
+
+                        <div style="display: flex; gap: 8px; margin-top: 16px;">
+                            <button class="btn btn-secondary btn-sm" onclick="currentViewingInviteId = ${invite.id}; viewInvitation(${invite.id})">👁️ View Details</button>
+                            ${pendingCount > 0 ? `<button class="btn btn-primary btn-sm" onclick="resendToPending(${invite.id})">🔄 Resend to All Pending</button>` : ''}
                         </div>
                     </div>
-                `).join('')}
-            </div>
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-bold mb-4">Your Events</h2>
-                ${state.events.length === 0 ? `
-                    <div class="text-center py-12">
-                        <i data-lucide="calendar" class="h-16 w-16 text-gray-300 mx-auto mb-4"></i>
-                        <p class="text-gray-400">No events yet. Create your first event!</p>
-                    </div>
-                ` : `
-                    <div class="grid grid-cols-2 gap-4">
-                        ${state.events.map(e => `
-                            <div class="border rounded-lg p-4 card-hover">
-                                <h3 class="font-bold text-lg">${e.title}</h3>
-                                <p class="text-sm text-gray-600">📅 ${e.date} at ${e.time}</p>
-                                <p class="text-sm text-gray-600">📍 ${e.location}</p>
-                                <button onclick="openModal()" class="mt-3 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
-                                    Send Invitations
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `}
-            </div>
-        `;
-    }
-    
-    if(state.activeTab === 'contacts') return `
-        <div class="bg-white rounded-xl shadow-lg p-6">
-            <h2 class="text-xl font-bold mb-4">Contacts</h2>
-            <div class="space-y-3">
-                ${state.contacts.map(c => `
-                    <div class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                        <div class="flex items-center gap-4">
-                            <input type="checkbox" ${state.selectedContacts.includes(c.id) ? 'checked' : ''} onchange="toggleContact(${c.id})" class="w-5 h-5">
-                            <div>
-                                <p class="font-semibold">${c.name}</p>
-                                <p class="text-sm text-gray-500">${c.phone} • ${c.email}</p>
-                            </div>
+                `;
+            }).join('');
+        }
+
+        function resendToContact(inviteId, contactId) {
+            const invite = invitations.find(i => i.id === inviteId);
+            const contact = contacts.find(c => c.id === contactId);
+            if (invite && contact) {
+                showNotification(`Resending "${invite.title}" to ${contact.name}`, 'success');
+                // In production, this would trigger actual SMS/call/email
+            }
+        }
+
+        function resendToPending(inviteId) {
+            const invite = invitations.find(i => i.id === inviteId);
+            if (invite) {
+                const pendingCount = invite.recipients.filter(recipientId => {
+                    const response = invite.responses && invite.responses[recipientId] ? invite.responses[recipientId] : 'pending';
+                    return response === 'pending';
+                }).length;
+                
+                showNotification(`Resending "${invite.title}" to ${pendingCount} pending recipient(s)`, 'success');
+                // In production, this would trigger actual resend logic
+            }
+        }
+
+        // Section switching
+        function switchSection(sectionId) {
+            // Remove active class from all sections and nav items
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // Add active class to clicked section and nav item
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Find and activate the correct nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(sectionId)) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if (modalId === 'createInviteModal') {
+                renderVoiceSelection();
+                renderRecipientSelection();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+        }
+
+        // Notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const msg = document.getElementById('notificationMessage');
+
+            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+            icon.textContent = icons[type] || icons.info;
+            msg.textContent = message;
+
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Contact management
+        function renderContacts() {
+            const container = document.getElementById('contactsList');
+            if (contacts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No contacts yet. Add your first contact!</p></div>';
+                return;
+            }
+
+            container.innerHTML = contacts.map(contact => `
+                <div class="contact-item">
+                    <div class="contact-info">
+                        <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                        <div class="contact-details">
+                            <h4>${contact.name}</h4>
+                            <p>${contact.phone} • ${contact.group}</p>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-sm ${c.status === 'accepted' ? 'bg-green-100 text-green-600' : c.status === 'declined' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'}">
-                            ${c.status}
+                    </div>
+                    <div class="contact-actions">
+                        <button class="btn btn-icon btn-secondary" onclick="editContact(${contact.id})" aria-label="Edit ${contact.name}">✏️</button>
+                        <button class="btn btn-icon btn-secondary" onclick="deleteContact(${contact.id})" aria-label="Delete ${contact.name}">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addContact() {
+            const name = document.getElementById('contactName').value;
+            const phone = document.getElementById('contactPhone').value;
+            const email = document.getElementById('contactEmail').value;
+            const group = document.getElementById('contactGroup').value;
+
+            if (!name || !phone) {
+                showNotification('Please fill in required fields', 'error');
+                return;
+            }
+
+            const newContact = {
+                id: Date.now(),
+                name,
+                phone,
+                email,
+                group
+            };
+
+            contacts.push(newContact);
+            saveToLocalStorage();
+            renderContacts();
+            closeModal('addContactModal');
+            showNotification('Contact added successfully!', 'success');
+
+            // Clear form
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactPhone').value = '';
+            document.getElementById('contactEmail').value = '';
+        }
+
+        async function deleteContact(id) {
+            if (confirm('Are you sure you want to delete this contact?')) {
+                contacts = contacts.filter(c => c.id !== id);
+                await deleteContactFromFirebase(id);
+                await saveToLocalStorage();
+                renderContacts();
+                showNotification('Contact deleted', 'info');
+            }
+        }
+
+        function editContact(id) {
+            showNotification('Edit functionality coming soon!', 'info');
+        }
+
+        // Voice recording with improved microphone handling
+        async function toggleRecording() {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                // Check if running on localhost or HTTPS
+                if (window.location.protocol === 'file:') {
+                    showNotification('❌ SECURITY ERROR: Cannot access microphone from file://. You must run a local server. See instructions in the Voice Clone section above.', 'error');
+                    return;
+                }
+                
+                // Check if MediaRecorder is supported
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showNotification('❌ Your browser does not support audio recording. Please use Chrome, Firefox, or Edge.', 'error');
+                    return;
+                }
+
+                // Request microphone access with basic constraints for better compatibility
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: true
+                });
+                
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                recordingSeconds = 0;
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audioPlayback = document.getElementById('audioPlayback');
+                    audioPlayback.src = audioUrl;
+                    
+                    // Store the blob for later use
+                    audioPlayback.dataset.blob = audioUrl;
+                    
+                    document.getElementById('recordedAudioContainer').style.display = 'block';
+                    
+                    // Stop all tracks to release microphone
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    showNotification('✅ Recording saved! You can play it back now.', 'success');
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                document.getElementById('recordBtn').classList.add('recording');
+                document.getElementById('waveform').classList.add('active');
+                document.getElementById('recordingStatus').textContent = 'Recording in progress...';
+
+                recordingInterval = setInterval(() => {
+                    recordingSeconds++;
+                    const minutes = Math.floor(recordingSeconds / 60);
+                    const seconds = recordingSeconds % 60;
+                    document.getElementById('recordingTime').textContent = 
+                        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }, 1000);
+
+                showNotification('🎙️ Recording started! Speak clearly into your microphone.', 'success');
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                
+                // Provide specific error messages with solutions
+                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                    showNotification('❌ Microphone access denied. Please allow microphone permissions in your browser settings and try again.', 'error');
+                } else if (error.name === 'NotFoundError') {
+                    showNotification('❌ No microphone found. Please connect a microphone and try again.', 'error');
+                } else if (error.name === 'NotReadableError') {
+                    showNotification('❌ Microphone is already in use by another application. Please close other apps using the microphone.', 'error');
+                } else if (error.message && error.message.includes('security origin')) {
+                    showNotification('❌ SECURITY ERROR: You must run this on a local server (localhost) or HTTPS. See instructions in Voice Clone section.', 'error');
+                } else {
+                    showNotification('❌ Error accessing microphone: ' + error.message + ' - Try running on localhost server.', 'error');
+                }
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                clearInterval(recordingInterval);
+
+                document.getElementById('recordBtn').classList.remove('recording');
+                document.getElementById('waveform').classList.remove('active');
+                document.getElementById('recordingStatus').textContent = 'Recording complete!';
+
+                showNotification('Recording stopped', 'info');
+            }
+        }
+
+        async function saveVoiceClone() {
+            const audioPlayback = document.getElementById('audioPlayback');
+            if (!audioPlayback.src) {
+                showNotification('No recording to save', 'error');
+                return;
+            }
+
+            showNotification('Uploading voice recording...', 'info');
+
+            const voiceId = Date.now();
+            
+            // Get the audio blob from the chunks
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            
+            // Upload to Firebase Storage (or use blob URL as fallback)
+            const audioUrl = await uploadVoiceToStorage(audioBlob, voiceId);
+
+            const voiceClone = {
+                id: voiceId,
+                name: `Voice Clone ${voiceClones.length + 1}`,
+                duration: recordingSeconds,
+                audioUrl: audioUrl,
+                createdAt: new Date().toISOString()
+            };
+
+            voiceClones.push(voiceClone);
+            await saveToLocalStorage();
+            renderVoiceClones();
+            discardRecording();
+            
+            if (isFirebaseConfigured()) {
+                showNotification('✅ Voice clone saved to Firebase!', 'success');
+            } else {
+                showNotification('Voice clone saved locally!', 'success');
+            }
+        }
+
+        function discardRecording() {
+            document.getElementById('recordedAudioContainer').style.display = 'none';
+            document.getElementById('audioPlayback').src = '';
+            recordingSeconds = 0;
+            document.getElementById('recordingTime').textContent = '00:00';
+            document.getElementById('recordingStatus').textContent = 'Click to start recording';
+        }
+
+        function renderVoiceClones() {
+            const container = document.getElementById('voicesList');
+            if (voiceClones.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No voice clones saved yet</p></div>';
+                return;
+            }
+
+            container.innerHTML = voiceClones.map(voice => `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h4 style="font-weight: 600;">${voice.name}</h4>
+                        <span style="font-size: 12px; color: var(--color-text-secondary);">
+                            ${Math.floor(voice.duration / 60)}:${String(voice.duration % 60).padStart(2, '0')}
                         </span>
                     </div>
-                `).join('')}
-            </div>
-            ${state.selectedContacts.length > 0 ? `
-                <div class="mt-6 p-4 bg-indigo-50 rounded-lg">
-                    <p class="mb-3 font-semibold">${state.selectedContacts.length} selected</p>
-                    <div class="flex gap-2">
-                        <button onclick="sendInvite('SMS')" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">📱 SMS</button>
-                        <button onclick="sendInvite('Email')" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">📧 Email</button>
-                        <button onclick="sendInvite('Voice')" class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">🎤 Voice</button>
+                    <div class="audio-player">
+                        <audio src="${voice.audioUrl}" controls></audio>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button class="btn btn-secondary btn-sm" onclick="deleteVoiceClone(${voice.id})">🗑️ Delete</button>
                     </div>
                 </div>
-            ` : ''}
-        </div>
-    `;
-    
-    if(state.activeTab === 'voice') return `
-        <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
-            <h2 class="text-xl font-bold mb-4 text-center">AI Voice Setup</h2>
-            <div class="text-center">
-                <div class="w-32 h-32 mx-auto mb-6 rounded-full flex items-center justify-center ${state.isRecording ? 'bg-red-100 animate-pulse' : 'bg-indigo-100'}">
-                    <i data-lucide="${state.isRecording ? 'mic-off' : 'mic'}" class="h-16 w-16 ${state.isRecording ? 'text-red-600' : 'text-indigo-600'}"></i>
-                </div>
-                ${!state.voiceSample ? `
-                    <h3 class="text-lg font-semibold mb-3">Record Voice Sample</h3>
-                    <p class="text-gray-600 mb-6">Record 30 seconds of your voice reading the script below</p>
-                    <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left text-sm italic">
-                        "Hi, this is [Your Name]. I hope you're doing well! I wanted to personally invite you to my upcoming event..."
+            `).join('');
+        }
+
+        async function deleteVoiceClone(id) {
+            if (confirm('Delete this voice clone?')) {
+                voiceClones = voiceClones.filter(v => v.id !== id);
+                await deleteVoiceCloneFromFirebase(id);
+                await saveToLocalStorage();
+                renderVoiceClones();
+                showNotification('Voice clone deleted', 'info');
+            }
+        }
+
+        // Invitations
+        function renderInvitations() {
+            const container = document.getElementById('invitationsList');
+            if (invitations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💌</div><p>No invitations yet. Create your first one!</p></div>';
+                return;
+            }
+
+            container.innerHTML = invitations.map(invite => {
+                const theme = detectEventTheme(invite.title);
+                return `
+                <div class="card" style="background: ${theme.gradient}; border-left: 4px solid ${theme.color};">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 8px; color: ${theme.color};">${theme.icon} ${invite.title}</h3>
+                            <p style="color: var(--color-text-secondary); margin-bottom: 8px;">${invite.message}</p>
+                            <p style="font-size: 12px; color: var(--color-text-secondary);">
+                                Sent to ${invite.recipients.length} contact(s)
+                            </p>
+                        </div>
+                        <span class="status-badge status-${invite.status}">${invite.status}</span>
                     </div>
-                    <button onclick="toggleRecording()" class="px-8 py-3 rounded-lg font-bold text-white ${state.isRecording ? 'bg-red-600' : 'bg-indigo-600'}">
-                        ${state.isRecording ? 'Recording... Stop' : 'Start Recording'}
-                    </button>
-                ` : `
-                    <h3 class="text-lg font-bold text-green-600 mb-3">✓ Voice Sample Recorded!</h3>
-                    <p class="text-gray-600 mb-6">Your AI voice is ready to use</p>
-                    <div class="flex gap-4 justify-center">
-                        <button class="px-6 py-3 bg-green-600 text-white rounded-lg">Test Voice</button>
-                        <button onclick="resetVoice()" class="px-6 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg">Re-record</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary btn-sm" onclick="viewInvitation(${invite.id})">👁️ View</button>
+                        <button class="btn btn-secondary btn-sm" onclick="trackInvitation(${invite.id})">📊 Track</button>
+                        <button class="btn btn-secondary btn-sm" onclick="deleteInvitation(${invite.id})">🗑️ Delete</button>
                     </div>
-                `}
-            </div>
-        </div>
-    `;
-}
-
-function renderModal() {
-    return `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModal()">
-            <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4" onclick="event.stopPropagation()">
-                <h3 class="text-lg font-bold mb-4">Send Invitations</h3>
-                <div class="space-y-3">
-                    ${['SMS', 'Email', 'Voice'].map(m => `
-                        <button onclick="sendInvite('${m}')" class="w-full p-4 border-2 rounded-lg hover:bg-gray-50 text-left font-semibold">
-                            ${m === 'SMS' ? '📱' : m === 'Email' ? '📧' : '🎤'} ${m}
-                        </button>
-                    `).join('')}
                 </div>
-                <button onclick="closeModal()" class="w-full mt-4 py-2 border rounded-lg">Cancel</button>
-            </div>
-        </div>
-    `;
-}
+            `}).join('');
+        }
 
-function changeTab(tab) { state.activeTab = tab; render(); }
-function updateField(field, value) { state.currentEvent[field] = value; updatePreviewOnly(); }
-function createEvent() {
-    if(!state.currentEvent.title || !state.currentEvent.date || !state.currentEvent.time) {
-        alert('Please fill in Event Title, Date, and Time');
-        return;
-    }
-    state.events.push({...state.currentEvent, id: Date.now()});
-    state.currentEvent = { title: '', date: '', time: '', location: '', description: '', host: '', dressCode: '', rsvpDeadline: '', template: 'modern' };
-    state.activeTab = 'manage';
-    render();
-    alert('✓ Event created successfully!');
-}
-function toggleContact(id) {
-    const idx = state.selectedContacts.indexOf(id);
-    idx > -1 ? state.selectedContacts.splice(idx, 1) : state.selectedContacts.push(id);
-    render();
-}
-function toggleRecording() {
-    state.isRecording = !state.isRecording;
-    render();
-    if(state.isRecording) setTimeout(() => { state.isRecording = false; state.voiceSample = true; render(); alert('✓ Voice recorded!'); }, 3000);
-}
-function resetVoice() { state.voiceSample = null; render(); }
-function openModal() { state.showModal = true; render(); }
-function closeModal() { state.showModal = false; render(); }
-function sendInvite(method) {
-    alert(`✓ Invitations sent via ${method}!`);
-    state.showModal = false;
-    state.selectedContacts = [];
-    render();
-}
+        function renderVoiceSelection() {
+            const container = document.getElementById('voiceSelection');
+            if (voiceClones.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No voice clones available. Record one first!</p></div>';
+                return;
+            }
 
-    function updatePreviewOnly() {
-    const preview = document.getElementById("preview");
-    if (!preview) return;
+            container.innerHTML = voiceClones.map(voice => `
+                <div class="card" style="cursor: pointer;" onclick="selectVoice(${voice.id})">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <input type="radio" name="voiceSelect" value="${voice.id}" id="voice${voice.id}">
+                        <label for="voice${voice.id}" style="flex: 1; cursor: pointer;">
+                            <h4 style="font-weight: 600; margin-bottom: 4px;">${voice.name}</h4>
+                            <p style="font-size: 12px; color: var(--color-text-secondary);">Duration: ${Math.floor(voice.duration / 60)}:${String(voice.duration % 60).padStart(2, '0')}</p>
+                        </label>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-    preview.innerHTML = `
-        <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title || 'Event Title'}</h3>
-        <div class="space-y-2 text-center">
-            <p>📅 ${state.currentEvent.date || 'Date'} at ${state.currentEvent.time || 'Time'}</p>
-            <p>📍 ${state.currentEvent.location || 'Location'}</p>
-            ${state.currentEvent.host ? `<p>👤 Hosted by: ${state.currentEvent.host}</p>` : ''}
-            ${state.currentEvent.description ? `<p class="mt-4 italic">${state.currentEvent.description}</p>` : ''}
-        </div>
-    `;
-}
+        function selectVoice(id) {
+            document.getElementById(`voice${id}`).checked = true;
+        }
 
-render();
-</script>
+        function renderRecipientSelection() {
+            const container = document.getElementById('recipientSelection');
+            if (contacts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No contacts available. Add contacts first!</p></div>';
+                return;
+            }
 
+            container.innerHTML = contacts.map(contact => `
+                <div class="contact-item">
+                    <div class="contact-info">
+                        <input type="checkbox" id="recipient${contact.id}" value="${contact.id}">
+                        <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                        <label for="recipient${contact.id}" style="cursor: pointer;">
+                            <div class="contact-details">
+                                <h4>${contact.name}</h4>
+                                <p>${contact.phone}</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-<span id="PING_IFRAME_FORM_DETECTION" style="display: none;"></span></body></html>
+        function createInvitation() {
+            const title = document.getElementById('inviteTitle').value;
+            const message = document.getElementById('inviteMessage').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const location = document.getElementById('eventLocation').value;
+
+            if (!title || !message) {
+                showNotification('Please fill in required fields', 'error');
+                return;
+            }
+
+            const selectedRecipients = Array.from(document.querySelectorAll('input[id^="recipient"]:checked'))
+                .map(cb => parseInt(cb.value));
+
+            if (selectedRecipients.length === 0) {
+                showNotification('Please select at least one recipient', 'error');
+                return;
+            }
+
+            // ✅ FIX 1: Initialize all recipients as "pending"
+            const responses = {};
+            selectedRecipients.forEach(recipientId => {
+                responses[recipientId] = 'pending';
+            });
+
+            const newInvitation = {
+                id: Date.now(),
+                title,
+                message,
+                eventDate,
+                location,
+                recipients: selectedRecipients,
+                responses: responses,  // ✅ ADD RESPONSES INITIALIZATION
+                status: 'sent',
+                date: new Date().toISOString()
+            };
+
+            invitations.push(newInvitation);
+            saveToLocalStorage();
+            renderInvitations();
+            renderAnalytics();  // ✅ REFRESH ANALYTICS
+            closeModal('createInviteModal');
+            showNotification('Invitation sent successfully!', 'success');
+
+            // Update stats
+            updateDashboardStats();
+
+            // Clear form
+            document.getElementById('inviteTitle').value = '';
+            document.getElementById('inviteMessage').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventLocation').value = '';
+        }
+
+        // Theme detection and styling
+        function detectEventTheme(title) {
+            const titleLower = title.toLowerCase();
+            
+            if (titleLower.includes('birthday') || titleLower.includes('bday')) {
+                return {
+                    name: 'birthday',
+                    icon: '🎂',
+                    gradient: 'linear-gradient(135deg, rgba(255, 107, 181, 0.15) 0%, rgba(255, 193, 7, 0.15) 100%)',
+                    decoration: '🎂🎈🎁🎉🎊',
+                    decorationSize: '80px',
+                    decorationPattern: 'repeat',
+                    color: '#e91e63'
+                };
+            } else if (titleLower.includes('wedding') || titleLower.includes('marriage')) {
+                return {
+                    name: 'wedding',
+                    icon: '💒',
+                    gradient: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(219, 39, 119, 0.1) 100%)',
+                    decoration: '💒💐💕💍👰',
+                    decorationSize: '100px',
+                    decorationPattern: 'elegant',
+                    color: '#db2777'
+                };
+            } else if (titleLower.includes('party') || titleLower.includes('celebration')) {
+                return {
+                    name: 'party',
+                    icon: '🎉',
+                    gradient: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(219, 39, 119, 0.15) 100%)',
+                    decoration: '🎉🥳🎊🍾🎈',
+                    decorationSize: '90px',
+                    decorationPattern: 'scattered',
+                    color: '#8b5cf6'
+                };
+            } else if (titleLower.includes('meeting') || titleLower.includes('conference')) {
+                return {
+                    name: 'meeting',
+                    icon: '📅',
+                    gradient: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%)',
+                    decoration: '📅💼📊📈🖊️',
+                    decorationSize: '70px',
+                    decorationPattern: 'professional',
+                    color: '#3b82f6'
+                };
+            } else if (titleLower.includes('anniversary')) {
+                return {
+                    name: 'anniversary',
+                    icon: '💝',
+                    gradient: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)',
+                    decoration: '💝🌹💕❤️✨',
+                    decorationSize: '95px',
+                    decorationPattern: 'romantic',
+                    color: '#ef4444'
+                };
+            } else {
+                return {
+                    name: 'custom',
+                    icon: '✨',
+                    gradient: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)',
+                    decoration: '✨🌟⭐💫🎊',
+                    decorationSize: '85px',
+                    decorationPattern: 'sparkle',
+                    color: '#6366f1'
+                };
+            }
+        }
+
+        function previewInvitation() {
+            const title = document.getElementById('inviteTitle').value;
+            const message = document.getElementById('inviteMessage').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const location = document.getElementById('eventLocation').value;
+
+            if (!title || !message) {
+                showNotification('Please fill in title and message first', 'error');
+                return;
+            }
+
+            const selectedRecipients = Array.from(document.querySelectorAll('input[id^="recipient"]:checked'))
+                .map(cb => parseInt(cb.value));
+            
+            const selectedVoiceId = document.querySelector('input[name="voiceSelect"]:checked')?.value;
+            const selectedVoice = voiceClones.find(v => v.id === parseInt(selectedVoiceId));
+
+            openModal('previewModal');
+            
+            // Detect theme and apply styling
+            const theme = detectEventTheme(title);
+            const previewCard = document.getElementById('previewCard');
+            const previewDecoration = document.getElementById('previewDecoration');
+            const previewTitle = document.getElementById('previewTitle');
+            
+            // Apply theme - enhanced with vibrant colors and borders
+            previewCard.style.background = theme.gradient;
+            previewCard.style.borderLeft = `5px solid ${theme.color}`;
+            previewCard.style.borderRight = `5px solid ${theme.color}`;
+            previewCard.style.borderTop = `2px solid ${theme.color}`;
+            previewCard.style.borderBottom = `2px solid ${theme.color}`;
+            previewTitle.style.color = theme.color;
+            
+            // Apply theme color to detail cards
+            document.getElementById('previewDateCard').style.borderLeftColor = theme.color;
+            document.getElementById('previewLocationCard').style.borderLeftColor = theme.color;
+            document.getElementById('previewGuestsCard').style.borderLeftColor = theme.color;
+            
+            // Apply theme color to labels
+            const labels = document.querySelectorAll('#previewDateCard > div > div:first-child, #previewLocationCard > div > div:first-child, #previewGuestsCard > div > div:first-child');
+            labels.forEach(label => {
+                label.style.color = theme.color;
+            });
+            
+            // Apply unique decoration pattern
+            previewDecoration.style.fontSize = theme.decorationSize;
+            previewDecoration.style.opacity = '0.08';
+            
+            // Create decorative pattern based on theme
+            let decorationHTML = '';
+            // Split emojis properly using spread operator to handle multi-byte characters
+            const emojiArray = [...theme.decoration];
+            
+            if (theme.decorationPattern === 'repeat') {
+                // Birthday - scattered repeating pattern all over
+                for (let i = 0; i < emojiArray.length; i++) {
+                    decorationHTML += `<span style="position: absolute; top: ${10 + i * 18}%; right: ${-5 + i * 12}%; font-size: ${theme.decorationSize}; opacity: 0.08;">${emojiArray[i]}</span>`;
+                    decorationHTML += `<span style="position: absolute; top: ${60 + i * 8}%; left: ${5 + i * 10}%; font-size: ${theme.decorationSize}; opacity: 0.08;">${emojiArray[i]}</span>`;
+                }
+            } else if (theme.decorationPattern === 'elegant') {
+                // Wedding - elegant corner cascade with rotation
+                for (let i = 0; i < emojiArray.length; i++) {
+                    const size = parseInt(theme.decorationSize) - i * 8;
+                    decorationHTML += `<span style="position: absolute; top: ${8 + i * 16}%; right: ${5}%; font-size: ${size}px; transform: rotate(${i * 12}deg); opacity: 0.08;">${emojiArray[i]}</span>`;
+                }
+            } else if (theme.decorationPattern === 'scattered') {
+                // Party - fun scattered everywhere
+                for (let i = 0; i < emojiArray.length; i++) {
+                    decorationHTML += `<span style="position: absolute; top: ${12 + i * 17}%; right: ${2 + (i % 2) * 15}%; font-size: ${theme.decorationSize}; transform: rotate(${i * -25}deg); opacity: 0.08;">${emojiArray[i]}</span>`;
+                    if (i % 2 === 0) {
+                        decorationHTML += `<span style="position: absolute; top: ${40 + i * 10}%; left: ${10 + i * 8}%; font-size: ${theme.decorationSize}; transform: rotate(${i * 20}deg); opacity: 0.06;">${emojiArray[i]}</span>`;
+                    }
+                }
+            } else if (theme.decorationPattern === 'professional') {
+                // Meeting - organized vertical stack
+                for (let i = 0; i < emojiArray.length; i++) {
+                    decorationHTML += `<span style="position: absolute; top: ${20 + i * 16}%; right: ${8}%; font-size: ${theme.decorationSize}; opacity: 0.07;">${emojiArray[i]}</span>`;
+                }
+            } else if (theme.decorationPattern === 'romantic') {
+                // Anniversary - heart cascade with wave effect
+                for (let i = 0; i < emojiArray.length; i++) {
+                    const rightPos = 5 + Math.sin(i * 0.8) * 8;
+                    decorationHTML += `<span style="position: absolute; top: ${8 + i * 18}%; right: ${rightPos}%; font-size: ${theme.decorationSize}; transform: rotate(${i * 8}deg); opacity: 0.08;">${emojiArray[i]}</span>`;
+                }
+            } else {
+                // Custom - sparkle pattern with animation
+                for (let i = 0; i < emojiArray.length; i++) {
+                    decorationHTML += `<span style="position: absolute; top: ${15 + i * 19}%; right: ${6 + (i % 3) * 6}%; font-size: ${theme.decorationSize}; animation: pulse 2s infinite ${i * 0.4}s; opacity: 0.08;">${emojiArray[i]}</span>`;
+                }
+            }
+            
+            previewDecoration.innerHTML = decorationHTML;
+            previewDecoration.style.pointerEvents = 'none';
+            
+            // Add theme icon to title and subtitle
+            previewTitle.innerHTML = `${theme.icon} ${title} ${theme.icon}`;
+            
+            // Set theme-specific subtitle
+            const subtitles = {
+                'birthday': 'You\'re Invited to Celebrate!',
+                'wedding': 'Join Us for Our Special Day',
+                'party': 'Let\'s Party Together!',
+                'meeting': 'Your Attendance is Requested',
+                'anniversary': 'Celebrate With Us',
+                'custom': 'You\'re Cordially Invited'
+            };
+            document.getElementById('previewSubtitle').textContent = subtitles[theme.name] || subtitles['custom'];
+            
+            // Set theme-specific footer with enhanced styling
+            const footers = {
+                'birthday': '🎂 Can\'t wait to celebrate with you! 🎂',
+                'wedding': '💒 Looking forward to sharing our joy with you 💒',
+                'party': '🎉 It won\'t be the same without you! 🎉',
+                'meeting': '📅 We value your participation 📅',
+                'anniversary': '💝 Your presence would mean the world to us 💝',
+                'custom': '✨ Hope to see you there! ✨'
+            };
+            document.getElementById('previewFooter').innerHTML = `<div style="font-size: 20px; font-weight: 700; color: ${theme.color}; text-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 16px; background: rgba(255,255,255,0.6); border-radius: 12px; border: 2px dashed ${theme.color};">${footers[theme.name] || footers['custom']}</div>`;
+            
+            // Populate preview
+            document.getElementById('previewMessage').textContent = message;
+            document.getElementById('previewDate').textContent = eventDate ? new Date(eventDate).toLocaleString() : 'Not specified';
+            document.getElementById('previewLocation').textContent = location || 'Not specified';
+            document.getElementById('previewRecipients').textContent = selectedRecipients.length > 0 
+                ? `${selectedRecipients.length} recipient(s) selected` 
+                : 'No recipients selected';
+            
+            // Show voice player if voice selected
+            const voicePreview = document.getElementById('previewVoice');
+            if (selectedVoice) {
+                voicePreview.innerHTML = `
+                    <h4 style="margin-bottom: 8px;">Voice Recording: ${selectedVoice.name}</h4>
+                    <audio src="${selectedVoice.audioUrl}" controls style="width: 100%;"></audio>
+                `;
+                voicePreview.style.display = 'block';
+            } else {
+                voicePreview.style.display = 'none';
+            }
+        }
+
+        function viewInvitation(id) {
+            const invite = invitations.find(i => i.id === id);
+            if (!invite) return;
+
+            openModal('viewInvitationModal');
+            
+            document.getElementById('viewTitle').textContent = invite.title;
+            document.getElementById('viewMessage').textContent = invite.message;
+            document.getElementById('viewDate').textContent = invite.eventDate ? new Date(invite.eventDate).toLocaleString() : 'Not specified';
+            document.getElementById('viewLocation').textContent = invite.location || 'Not specified';
+            document.getElementById('viewStatus').textContent = invite.status;
+            document.getElementById('viewStatus').className = `status-badge status-${invite.status}`;
+            
+            // Show recipient responses
+            const recipientsContainer = document.getElementById('viewRecipients');
+            const recipientsList = invite.recipients.map(recipientId => {
+                const contact = contacts.find(c => c.id === recipientId);
+                const response = invite.responses && invite.responses[recipientId] ? invite.responses[recipientId] : 'pending';
+                return contact ? `
+                    <div class="contact-item" style="margin-bottom: 8px;">
+                        <div class="contact-info">
+                            <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                            <div class="contact-details">
+                                <h4>${contact.name}</h4>
+                                <p>${contact.phone}</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-${response}">${response}</span>
+                    </div>
+                ` : '';
+            }).join('');
+            
+            recipientsContainer.innerHTML = recipientsList || '<p>No recipients</p>';
+        }
+
+        function resendInvitation(id) {
+            const invite = invitations.find(i => i.id === id);
+            if (invite) {
+                showNotification(`Resending invitation: ${invite.title}`, 'success');
+                // In production, this would trigger actual resend logic
+            }
+        }
+
+        function updateInvitationResponse(inviteId, recipientId, response) {
+            const invite = invitations.find(i => i.id === inviteId);
+            if (invite) {
+                if (!invite.responses) invite.responses = {};
+                invite.responses[recipientId] = response;
+                saveToLocalStorage();
+                renderAnalytics();  // ✅ FIX 2: REFRESH ANALYTICS IMMEDIATELY
+                renderInvitations();
+                viewInvitation(inviteId); // Refresh the view
+                showNotification(`Response updated to: ${response}`, 'success');
+            }
+        }
+
+        function trackInvitation(id) {
+            showNotification('Tracking details will be shown here', 'info');
+        }
+
+        async function deleteInvitation(id) {
+            if (confirm('Delete this invitation?')) {
+                invitations = invitations.filter(i => i.id !== id);
+                await deleteInvitationFromFirebase(id);
+                await saveToLocalStorage();
+                renderInvitations();
+                updateDashboardStats();
+                showNotification('Invitation deleted', 'info');
+            }
+        }
+
+        // Templates
+        function renderTemplates() {
+            const container = document.getElementById('templateGrid');
+            container.innerHTML = templates.map(template => `
+                <div class="template-card" data-template="${template.name.toLowerCase()}" onclick="selectTemplate(${template.id})">
+                    <div class="template-icon">${template.icon}</div>
+                    <div class="template-name">${template.name}</div>
+                    <div class="template-description">${template.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectTemplate(id) {
+            const template = templates.find(t => t.id === id);
+            showNotification(`Selected: ${template.name} template`, 'success');
+            openModal('createInviteModal');
+        }
+
+        // Dashboard stats
+        function updateDashboardStats() {
+            document.getElementById('totalInvites').textContent = invitations.length;
+            document.getElementById('deliveredCount').textContent = 
+                invitations.filter(i => i.status === 'delivered').length;
+            document.getElementById('pendingCount').textContent = 
+                invitations.filter(i => i.status === 'pending').length;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+
+        // Make nav items keyboard accessible
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
