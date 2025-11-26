@@ -1,98 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connect & Celebrate - AI Event System</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-* { font-family: 'Poppins', sans-serif; }
-body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-.card-hover { transition: all 0.3s ease; cursor: grab; }
-.card-hover:active { cursor: grabbing; }
-.card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-.animate-float { animation: float 3s ease-in-out infinite; }
-</style>
-</head>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect &amp; Celebrate - AI Event Invitations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.mx-auto{margin-left:auto;margin-right:auto}.mb-4{margin-bottom:1rem}.mt-1{margin-top:0.25rem}.mb-6{margin-bottom:1.5rem}.flex{display:flex}.grid{display:grid}.h-8{height:2rem}.h-10{height:2.5rem}.h-16{height:4rem}.w-8{width:2rem}.w-full{width:100%}.w-10{width:2.5rem}.w-16{width:4rem}.max-w-6xl{max-width:72rem}.flex-1{flex:1 1 0%}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-blue-50{--tw-gradient-from:#eff6ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-green-50{--tw-gradient-from:#f0fdf4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(240 253 244 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgb(79 70 229 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-50{--tw-gradient-from:#faf5ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 245 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-emerald-100{--tw-gradient-to:#d1fae5 var(--tw-gradient-to-position)}.to-indigo-100{--tw-gradient-to:#e0e7ff var(--tw-gradient-to-position)}.to-pink-100{--tw-gradient-to:#fce7f3 var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.pb-8{padding-bottom:2rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.capitalize{text-transform:capitalize}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-indigo-100{--tw-text-opacity:1;color:rgb(224 231 255 / var(--tw-text-opacity, 1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-offset-2{--tw-ring-offset-width:2px}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}</style></head>
 <body>
 
-<div id="app"></div>
+<div id="app">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
+            <div class="max-w-6xl mx-auto px-4 py-6">
+                <h1 class="text-3xl font-bold flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" class="lucide lucide-calendar h-8 w-8"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
+                    Connect &amp; Celebrate
+                </h1>
+                <p class="text-indigo-100 mt-1">Create beautiful AI-powered invitations</p>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 py-6">
+            <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
+                
+                    <button onclick="changeTab('create')" class="flex-1 py-3 rounded-lg font-semibold transition bg-gradient-to-r from-indigo-600 to-purple-600 text-white" fdprocessedid="uhpx7">
+                        Create
+                    </button>
+                
+                    <button onclick="changeTab('manage')" class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:bg-gray-100" fdprocessedid="o9fm2">
+                        Manage
+                    </button>
+                
+                    <button onclick="changeTab('contacts')" class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:bg-gray-100" fdprocessedid="z5pv1e">
+                        Contacts
+                    </button>
+                
+                    <button onclick="changeTab('voice')" class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:bg-gray-100" fdprocessedid="aj1u87">
+                        Voice
+                    </button>
+                
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 pb-8">
+            
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                <h2 class="text-xl font-bold mb-4">Create Event</h2>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Event Title" value="" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg" fdprocessedid="kiw16">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="date" value="" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                        <input type="time" value="" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                    </div>
+                    <input type="text" placeholder="Location" value="" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg" fdprocessedid="bb9si8t">
+                    <input type="text" placeholder="Host Name" value="" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg" fdprocessedid="d5gbc8">
+                    <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3"></textarea>
+                    <div class="grid grid-cols-3 gap-2">
+                        
+                            <button onclick="updateField('template', 'modern')" class="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-100 ring-4 ring-offset-2 border-blue-300" fdprocessedid="gw1ix">
+                                <div class="text-blue-600 font-semibold capitalize">modern</div>
+                            </button>
+                        
+                            <button onclick="updateField('template', 'elegant')" class="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-pink-100 " fdprocessedid="voj8mj">
+                                <div class="text-purple-600 font-semibold capitalize">elegant</div>
+                            </button>
+                        
+                            <button onclick="updateField('template', 'casual')" class="p-3 rounded-lg bg-gradient-to-br from-green-50 to-emerald-100 " fdprocessedid="c9xnyb">
+                                <div class="text-green-600 font-semibold capitalize">casual</div>
+                            </button>
+                        
+                    </div>
+                    <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition" fdprocessedid="ema4pv">
+                        Create Event
+                    </button>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                <h2 class="text-xl font-bold mb-4">Preview</h2>
+                <div id="preview" "class="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-300 border-2">
+        <h3 class="text-2xl font-bold text-center mb-4">Event Title</h3>
+        <div class="space-y-2 text-center">
+            <p>📅 Date at Time</p>
+            <p>📍 Location</p>
+            
+            
+        </div>
+    </div>
+            </div>
+        </div>
+    
+        </div>
+        
+    </div>
 
 <script>
 let state = {
     activeTab: 'create',
     events: [],
-    tasks: [],
-    contacts: [],
-    voices: [],
-    currentEvent: { title:'', date:'', time:'', location:'', description:'', host:'', template:'modern', rsvpDeadline:'' },
-    currentTask: '',
-    currentContact: { name:'', email:'', message:'' },
-    currentVoice: { command:'', response:'' },
+    currentEvent: { title: '', date: '', time: '', location: '', description: '', host: '', dressCode: '', rsvpDeadline: '', template: 'modern' },
+    contacts: [
+        { id: 1, name: 'Sarah Johnson', phone: '+1-555-0123', email: 'sarah@email.com', group: 'Friends', status: 'pending' },
+        { id: 2, name: 'Mike Chen', phone: '+1-555-0124', email: 'mike@email.com', group: 'Colleagues', status: 'accepted' },
+        { id: 3, name: 'Emma Davis', phone: '+1-555-0125', email: 'emma@email.com', group: 'Family', status: 'declined' },
+        { id: 4, name: 'Alex Rodriguez', phone: '+1-555-0126', email: 'alex@email.com', group: 'Friends', status: 'pending' }
+    ],
+    selectedContacts: [],
     isRecording: false,
+    voiceSample: null,
+    showModal: false
 };
 
-// Templates
 const templates = {
     modern: { bg: 'bg-gradient-to-br from-blue-50 to-indigo-100', accent: 'text-blue-600', border: 'border-blue-300' },
     elegant: { bg: 'bg-gradient-to-br from-purple-50 to-pink-100', accent: 'text-purple-600', border: 'border-purple-300' },
     casual: { bg: 'bg-gradient-to-br from-green-50 to-emerald-100', accent: 'text-green-600', border: 'border-green-300' }
 };
 
-// --- RENDER ---
 function render() {
     document.getElementById('app').innerHTML = `
-    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl">
+            <div class="max-w-6xl mx-auto px-4 py-6">
+                <h1 class="text-3xl font-bold flex items-center gap-3">
+                    <i data-lucide="calendar" class="h-8 w-8"></i>
+                    Connect & Celebrate
+                </h1>
+                <p class="text-indigo-100 mt-1">Create beautiful AI-powered invitations</p>
+            </div>
+        </div>
+
         <div class="max-w-6xl mx-auto px-4 py-6">
-            <h1 class="text-3xl font-bold flex items-center gap-3">
-                <i data-lucide="calendar" class="h-8 w-8"></i>
-                Connect & Celebrate
-            </h1>
-            <p class="text-indigo-100 mt-1">AI Event & Task Manager</p>
+            <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
+                ${['create', 'manage', 'contacts', 'voice'].map(tab => `
+                    <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab === tab ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}">
+                        ${tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                `).join('')}
+            </div>
         </div>
-    </div>
 
-    <div class="max-w-6xl mx-auto px-4 py-6">
-        <div class="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
-            ${['create','manage','contacts','voice'].map(tab => `
-                <button onclick="changeTab('${tab}')" class="flex-1 py-3 rounded-lg font-semibold transition ${state.activeTab===tab?'bg-gradient-to-r from-indigo-600 to-purple-600 text-white':'text-gray-600 hover:bg-gray-100'}">
-                    ${tab.charAt(0).toUpperCase()+tab.slice(1)}
-                </button>
-            `).join('')}
+        <div class="max-w-6xl mx-auto px-4 pb-8">
+            ${getContent()}
         </div>
-    </div>
-
-    <div class="max-w-6xl mx-auto px-4 pb-8">
-        ${getContent()}
-    </div>
+        ${state.showModal ? renderModal() : ''}
     `;
     if(window.lucide) lucide.createIcons();
 }
 
-// --- TAB CONTENT ---
 function getContent() {
-    if(state.activeTab==='create') return `
+    if(state.activeTab === 'create') return `
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
                 <h2 class="text-xl font-bold mb-4">Create Event</h2>
                 <div class="space-y-4">
-                    <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="state.currentEvent.title=this.value" class="w-full px-4 py-3 border rounded-lg">
+                    <input type="text" placeholder="Event Title" value="${state.currentEvent.title}" oninput="updateField('title', this.value)" class="w-full px-4 py-3 border rounded-lg">
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="date" value="${state.currentEvent.date}" oninput="state.currentEvent.date=this.value" class="w-full px-4 py-3 border rounded-lg">
-                        <input type="time" value="${state.currentEvent.time}" oninput="state.currentEvent.time=this.value" class="w-full px-4 py-3 border rounded-lg">
+                        <input type="date" value="${state.currentEvent.date}" oninput="updateField('date', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                        <input type="time" value="${state.currentEvent.time}" oninput="updateField('time', this.value)" class="w-full px-4 py-3 border rounded-lg">
                     </div>
-                    <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="state.currentEvent.location=this.value" class="w-full px-4 py-3 border rounded-lg">
-                    <input type="text" placeholder="Host" value="${state.currentEvent.host}" oninput="state.currentEvent.host=this.value" class="w-full px-4 py-3 border rounded-lg">
-                    <textarea placeholder="Description" oninput="state.currentEvent.description=this.value" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
-                    <input type="date" placeholder="RSVP Deadline" value="${state.currentEvent.rsvpDeadline}" oninput="state.currentEvent.rsvpDeadline=this.value" class="w-full px-4 py-3 border rounded-lg">
-                    
-                    <h3 class="font-semibold">Select Template:</h3>
+                    <input type="text" placeholder="Location" value="${state.currentEvent.location}" oninput="updateField('location', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                    <input type="text" placeholder="Host Name" value="${state.currentEvent.host}" oninput="updateField('host', this.value)" class="w-full px-4 py-3 border rounded-lg">
+                    <textarea placeholder="Description" oninput="updateField('description', this.value)" class="w-full px-4 py-3 border rounded-lg" rows="3">${state.currentEvent.description}</textarea>
                     <div class="grid grid-cols-3 gap-2">
-                        ${Object.keys(templates).map(key=>`
-                            <div class="card-hover p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template===key?'ring-4 ring-offset-2 '+templates[key].border:''}" draggable="true" ondragstart="dragStart(event,'${key}')" onclick="state.currentEvent.template='${key}'">
-                                <div class="${templates[key].accent} font-semibold capitalize text-center">${key}</div>
-                            </div>
+                        ${Object.keys(templates).map(key => `
+                            <button onclick="updateField('template', '${key}')" class="p-3 rounded-lg ${templates[key].bg} ${state.currentEvent.template === key ? 'ring-4 ring-offset-2 ' + templates[key].border : ''}">
+                                <div class="${templates[key].accent} font-semibold capitalize">${key}</div>
+                            </button>
                         `).join('')}
                     </div>
                     <button onclick="createEvent()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-xl transition">
@@ -102,154 +182,199 @@ function getContent() {
             </div>
             <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
                 <h2 class="text-xl font-bold mb-4">Preview</h2>
-                <div id="preview" class="p-6 rounded-xl border-2 ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border}">
-                    <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title||'Event Title'}</h3>
+                <div id="preview" "class="p-6 rounded-xl ${templates[state.currentEvent.template].bg} ${templates[state.currentEvent.template].border} border-2">
+                    <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title || 'Event Title'}</h3>
                     <div class="space-y-2 text-center">
-                        <p>📅 ${state.currentEvent.date||'Date'} at ${state.currentEvent.time||'Time'}</p>
-                        <p>📍 ${state.currentEvent.location||'Location'}</p>
-                        ${state.currentEvent.host?`<p>👤 Hosted by: ${state.currentEvent.host}</p>`:''}
-                        ${state.currentEvent.description?`<p class="mt-4 italic">${state.currentEvent.description}</p>`:''}
-                        ${state.currentEvent.rsvpDeadline?`<p class="mt-2 text-sm text-gray-500">RSVP by ${state.currentEvent.rsvpDeadline}</p>`:''}
+                        <p>📅 ${state.currentEvent.date || 'Date'} at ${state.currentEvent.time || 'Time'}</p>
+                        <p>📍 ${state.currentEvent.location || 'Location'}</p>
+                        ${state.currentEvent.host ? `<p>👤 Hosted by: ${state.currentEvent.host}</p>` : ''}
+                        ${state.currentEvent.description ? `<p class="mt-4 italic">${state.currentEvent.description}</p>` : ''}
                     </div>
                 </div>
             </div>
         </div>
     `;
-
-    if(state.activeTab==='manage') return `
-        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-            <h2 class="text-xl font-bold mb-4">Manage Tasks</h2>
-            <div class="flex gap-2 mb-4">
-                <input type="text" placeholder="New Task" class="flex-1 px-4 py-2 border rounded-lg" oninput="state.currentTask=this.value">
-                <button onclick="addTask()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Add</button>
-            </div>
-            <ul class="space-y-2">
-                ${state.tasks.map(t=>`
-                    <li class="flex justify-between items-center p-2 border rounded-lg">
-                        <span>${t.task} (${t.status})</span>
-                        <div class="flex gap-2">
-                            <button onclick="updateTask(${t.id})" class="px-2 py-1 bg-green-500 text-white rounded">✓</button>
-                            <button onclick="deleteTask(${t.id})" class="px-2 py-1 bg-red-500 text-white rounded">✕</button>
+    
+    if(state.activeTab === 'manage') {
+        const stats = {
+            total: state.contacts.length,
+            accepted: state.contacts.filter(c => c.status === 'accepted').length,
+            declined: state.contacts.filter(c => c.status === 'declined').length,
+            pending: state.contacts.filter(c => c.status === 'pending').length
+        };
+        return `
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                ${[
+                    { label: 'Total', value: stats.total, color: 'blue', icon: 'users' },
+                    { label: 'Accepted', value: stats.accepted, color: 'green', icon: 'check-circle' },
+                    { label: 'Declined', value: stats.declined, color: 'red', icon: 'x-circle' },
+                    { label: 'Pending', value: stats.pending, color: 'yellow', icon: 'clock' }
+                ].map(s => `
+                    <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-500">${s.label}</p>
+                                <p class="text-3xl font-bold text-${s.color}-600">${s.value}</p>
+                            </div>
+                            <i data-lucide="${s.icon}" class="h-10 w-10 text-${s.color}-500"></i>
                         </div>
-                    </li>
+                    </div>
                 `).join('')}
-            </ul>
-        </div>
-    `;
-
-    if(state.activeTab==='contacts') return `
-        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Your Events</h2>
+                ${state.events.length === 0 ? `
+                    <div class="text-center py-12">
+                        <i data-lucide="calendar" class="h-16 w-16 text-gray-300 mx-auto mb-4"></i>
+                        <p class="text-gray-400">No events yet. Create your first event!</p>
+                    </div>
+                ` : `
+                    <div class="grid grid-cols-2 gap-4">
+                        ${state.events.map(e => `
+                            <div class="border rounded-lg p-4 card-hover">
+                                <h3 class="font-bold text-lg">${e.title}</h3>
+                                <p class="text-sm text-gray-600">📅 ${e.date} at ${e.time}</p>
+                                <p class="text-sm text-gray-600">📍 ${e.location}</p>
+                                <button onclick="openModal()" class="mt-3 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
+                                    Send Invitations
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `}
+            </div>
+        `;
+    }
+    
+    if(state.activeTab === 'contacts') return `
+        <div class="bg-white rounded-xl shadow-lg p-6">
             <h2 class="text-xl font-bold mb-4">Contacts</h2>
-            <div class="space-y-2 mb-4">
-                <input type="text" placeholder="Name" class="w-full px-4 py-2 border rounded" oninput="state.currentContact.name=this.value">
-                <input type="email" placeholder="Email" class="w-full px-4 py-2 border rounded" oninput="state.currentContact.email=this.value">
-                <textarea placeholder="Message" class="w-full px-4 py-2 border rounded" rows="3" oninput="state.currentContact.message=this.value"></textarea>
-                <button onclick="addContact()" class="w-full py-2 bg-indigo-600 text-white rounded">Send</button>
+            <div class="space-y-3">
+                ${state.contacts.map(c => `
+                    <div class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                        <div class="flex items-center gap-4">
+                            <input type="checkbox" ${state.selectedContacts.includes(c.id) ? 'checked' : ''} onchange="toggleContact(${c.id})" class="w-5 h-5">
+                            <div>
+                                <p class="font-semibold">${c.name}</p>
+                                <p class="text-sm text-gray-500">${c.phone} • ${c.email}</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm ${c.status === 'accepted' ? 'bg-green-100 text-green-600' : c.status === 'declined' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'}">
+                            ${c.status}
+                        </span>
+                    </div>
+                `).join('')}
             </div>
-            <ul class="space-y-2">
-                ${state.contacts.map(c=>`<li class="p-2 border rounded"><strong>${c.name}</strong> (${c.email}): ${c.message}</li>`).join('')}
-            </ul>
+            ${state.selectedContacts.length > 0 ? `
+                <div class="mt-6 p-4 bg-indigo-50 rounded-lg">
+                    <p class="mb-3 font-semibold">${state.selectedContacts.length} selected</p>
+                    <div class="flex gap-2">
+                        <button onclick="sendInvite('SMS')" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">📱 SMS</button>
+                        <button onclick="sendInvite('Email')" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">📧 Email</button>
+                        <button onclick="sendInvite('Voice')" class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">🎤 Voice</button>
+                    </div>
+                </div>
+            ` : ''}
         </div>
     `;
-
-    if(state.activeTab==='voice') return `
-        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
-            <h2 class="text-xl font-bold mb-4">Voice Commands</h2>
-            <div class="flex gap-2 mb-4">
-                <input type="text" placeholder="Command" class="flex-1 px-4 py-2 border rounded" oninput="state.currentVoice.command=this.value">
-                <input type="text" placeholder="Response" class="flex-1 px-4 py-2 border rounded" oninput="state.currentVoice.response=this.value">
-                <button onclick="recordVoice()" class="px-4 py-2 bg-indigo-600 text-white rounded">${state.isRecording?'Recording...':'Record & Save'}</button>
+    
+    if(state.activeTab === 'voice') return `
+        <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
+            <h2 class="text-xl font-bold mb-4 text-center">AI Voice Setup</h2>
+            <div class="text-center">
+                <div class="w-32 h-32 mx-auto mb-6 rounded-full flex items-center justify-center ${state.isRecording ? 'bg-red-100 animate-pulse' : 'bg-indigo-100'}">
+                    <i data-lucide="${state.isRecording ? 'mic-off' : 'mic'}" class="h-16 w-16 ${state.isRecording ? 'text-red-600' : 'text-indigo-600'}"></i>
+                </div>
+                ${!state.voiceSample ? `
+                    <h3 class="text-lg font-semibold mb-3">Record Voice Sample</h3>
+                    <p class="text-gray-600 mb-6">Record 30 seconds of your voice reading the script below</p>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left text-sm italic">
+                        "Hi, this is [Your Name]. I hope you're doing well! I wanted to personally invite you to my upcoming event..."
+                    </div>
+                    <button onclick="toggleRecording()" class="px-8 py-3 rounded-lg font-bold text-white ${state.isRecording ? 'bg-red-600' : 'bg-indigo-600'}">
+                        ${state.isRecording ? 'Recording... Stop' : 'Start Recording'}
+                    </button>
+                ` : `
+                    <h3 class="text-lg font-bold text-green-600 mb-3">✓ Voice Sample Recorded!</h3>
+                    <p class="text-gray-600 mb-6">Your AI voice is ready to use</p>
+                    <div class="flex gap-4 justify-center">
+                        <button class="px-6 py-3 bg-green-600 text-white rounded-lg">Test Voice</button>
+                        <button onclick="resetVoice()" class="px-6 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg">Re-record</button>
+                    </div>
+                `}
             </div>
-            <ul class="space-y-2">
-                ${state.voices.map(v=>`<li class="p-2 border rounded"><strong>${v.command}</strong>: ${v.response}</li>`).join('')}
-            </ul>
         </div>
     `;
 }
 
-// --- TAB SWITCH ---
-function changeTab(tab){
-    state.activeTab=tab;
-    if(tab==='manage') loadTasks();
-    if(tab==='contacts') loadContacts();
-    if(tab==='voice') loadVoices();
-    if(tab==='create') loadEvents();
+function renderModal() {
+    return `
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModal()">
+            <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4" onclick="event.stopPropagation()">
+                <h3 class="text-lg font-bold mb-4">Send Invitations</h3>
+                <div class="space-y-3">
+                    ${['SMS', 'Email', 'Voice'].map(m => `
+                        <button onclick="sendInvite('${m}')" class="w-full p-4 border-2 rounded-lg hover:bg-gray-50 text-left font-semibold">
+                            ${m === 'SMS' ? '📱' : m === 'Email' ? '📧' : '🎤'} ${m}
+                        </button>
+                    `).join('')}
+                </div>
+                <button onclick="closeModal()" class="w-full mt-4 py-2 border rounded-lg">Cancel</button>
+            </div>
+        </div>
+    `;
+}
+
+function changeTab(tab) { state.activeTab = tab; render(); }
+function updateField(field, value) { state.currentEvent[field] = value; updatePreviewOnly(); }
+function createEvent() {
+    if(!state.currentEvent.title || !state.currentEvent.date || !state.currentEvent.time) {
+        alert('Please fill in Event Title, Date, and Time');
+        return;
+    }
+    state.events.push({...state.currentEvent, id: Date.now()});
+    state.currentEvent = { title: '', date: '', time: '', location: '', description: '', host: '', dressCode: '', rsvpDeadline: '', template: 'modern' };
+    state.activeTab = 'manage';
+    render();
+    alert('✓ Event created successfully!');
+}
+function toggleContact(id) {
+    const idx = state.selectedContacts.indexOf(id);
+    idx > -1 ? state.selectedContacts.splice(idx, 1) : state.selectedContacts.push(id);
+    render();
+}
+function toggleRecording() {
+    state.isRecording = !state.isRecording;
+    render();
+    if(state.isRecording) setTimeout(() => { state.isRecording = false; state.voiceSample = true; render(); alert('✓ Voice recorded!'); }, 3000);
+}
+function resetVoice() { state.voiceSample = null; render(); }
+function openModal() { state.showModal = true; render(); }
+function closeModal() { state.showModal = false; render(); }
+function sendInvite(method) {
+    alert(`✓ Invitations sent via ${method}!`);
+    state.showModal = false;
+    state.selectedContacts = [];
     render();
 }
 
-// --- DRAG ---
-function dragStart(e,key){ state.currentEvent.template=key; render(); }
+    function updatePreviewOnly() {
+    const preview = document.getElementById("preview");
+    if (!preview) return;
 
-// --- EVENTS API ---
-async function loadEvents(){
-    const res = await fetch('http://127.0.0.1:5000/api/events');
-    state.events = await res.json();
-    render();
-}
-async function createEvent(){
-    if(!state.currentEvent.title||!state.currentEvent.date||!state.currentEvent.time){ alert('Fill Title, Date & Time'); return; }
-    const res = await fetch('http://127.0.0.1:5000/api/events',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(state.currentEvent)});
-    const data = await res.json();
-    alert('Event Created!');
-    state.currentEvent={ title:'', date:'', time:'', location:'', description:'', host:'', template:'modern', rsvpDeadline:'' };
-    loadEvents();
+    preview.innerHTML = `
+        <h3 class="text-2xl font-bold text-center mb-4">${state.currentEvent.title || 'Event Title'}</h3>
+        <div class="space-y-2 text-center">
+            <p>📅 ${state.currentEvent.date || 'Date'} at ${state.currentEvent.time || 'Time'}</p>
+            <p>📍 ${state.currentEvent.location || 'Location'}</p>
+            ${state.currentEvent.host ? `<p>👤 Hosted by: ${state.currentEvent.host}</p>` : ''}
+            ${state.currentEvent.description ? `<p class="mt-4 italic">${state.currentEvent.description}</p>` : ''}
+        </div>
+    `;
 }
 
-// --- TASKS API ---
-async function loadTasks(){
-    const res = await fetch('http://127.0.0.1:5000/api/manage');
-    state.tasks = await res.json();
-    render();
-}
-async function addTask(){
-    if(!state.currentTask) return;
-    await fetch('http://127.0.0.1:5000/api/manage',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({task:state.currentTask})});
-    state.currentTask='';
-    loadTasks();
-}
-async function updateTask(id){
-    await fetch(`http://127.0.0.1:5000/api/manage/${id}`,{ method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:'completed'})});
-    loadTasks();
-}
-async function deleteTask(id){
-    await fetch(`http://127.0.0.1:5000/api/manage/${id}`,{ method:'DELETE'});
-    loadTasks();
-}
-
-// --- CONTACTS API ---
-async function loadContacts(){
-    const res = await fetch('http://127.0.0.1:5000/api/contacts');
-    state.contacts = await res.json();
-    render();
-}
-async function addContact(){
-    if(!state.currentContact.name||!state.currentContact.email||!state.currentContact.message) return;
-    await fetch('http://127.0.0.1:5000/api/contacts',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(state.currentContact)});
-    state.currentContact={name:'', email:'', message:''};
-    loadContacts();
-}
-
-// --- VOICE API ---
-async function loadVoices(){
-    const res = await fetch('http://127.0.0.1:5000/api/voice');
-    state.voices = await res.json();
-    render();
-}
-function recordVoice(){
-    if(!state.currentVoice.command||!state.currentVoice.response){ alert('Fill Command & Response'); return; }
-    state.isRecording=true; render();
-    setTimeout(async()=>{
-        state.isRecording=false;
-        await fetch('http://127.0.0.1:5000/api/voice',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(state.currentVoice)});
-        state.currentVoice={command:'', response:''};
-        loadVoices();
-        alert('Voice command saved!');
-    },2000);
-}
-
-// --- INIT ---
-changeTab('create');
 render();
 </script>
-</body>
-</html>
+
+
+<span id="PING_IFRAME_FORM_DETECTION" style="display: none;"></span></body></html>
